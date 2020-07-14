@@ -15,6 +15,22 @@
 /**
  * Adds a random greeting to the page.
  */
+function addFunFact() {
+    const funFacts = ['Jennifer Almost Didn\'t Return For The Final Season',
+    'The Cast Took A Trip To Vegas Before The Premiere',
+    'They Wanted Courteney Cox To Play Rachel',
+    'The Writers Got Creative To Cut Costs',
+    'Gunther Was Actually A Barista'];
+
+    const randomFactHeading= '<br> Fun fact about friends 101: <br>';
+    const randomFact= funFacts[Math.floor(Math.random()* funFacts.length)];
+
+    const factContainer = document.getElementById('fun-fact-container');
+    const factWithHeading = randomFactHeading+randomFact;
+    factContainer.innerHTML = factWithHeading;
+    
+}
+
 function addRandomGreeting() {
   const greetings =
       ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
