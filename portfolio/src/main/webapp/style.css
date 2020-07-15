@@ -12,3 +12,8 @@ body img {
     height: 300px;
     width: 250px;
 }
+
+#see-more-projects {
+    display: none;
+    visibility: hidden;
+}

@@ -31,3 +31,27 @@ function addFunFact() {
     
 }
 
+var clickShowCount= 0;
+
+function showMoreOrLessProjects() {
+    clickShowCount++;
+    if(clickShowCount%2==0)
+    {
+        const divToShow= document.getElementById('see-more-projects');
+        divToShow.style.visibility= 'hidden';
+        divToShow.style.display= 'none';
+
+        const buttonChangeText= document.getElementById('show-projects');
+        buttonChangeText.innerHTML= "Show more projects";
+    }
+    else {
+        const divToShow= document.getElementById('see-more-projects');
+        divToShow.style.visibility= 'visible';
+        divToShow.style.display= 'block';
+
+        const buttonChangeText= document.getElementById('show-projects');
+        buttonChangeText.innerHTML= "Show less";
+    }
+    
+}
+
