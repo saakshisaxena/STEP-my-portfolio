@@ -24,6 +24,15 @@ body img {
 body {
     background-color: grey;
     font-family: 'Bellefair';
+    background-image: url('https://media.giphy.com/media/GC7C2Fi902BDG/giphy.gif');
+    /* Set a specific height */
+    height: 500px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 img:hover {
@@ -52,10 +61,10 @@ img {
 
 
 #content {
-    color: hsla(0, 0%, 50%);
+    color: hsla(0, 0%, 90%, 0.7);
     border: 10px solid transparent;
     padding: 15px;
-    background-color: black;
+    background-color: hsla(0, 0%, 0%, 0.5);
 }
 
 navbar ul {
@@ -82,3 +91,20 @@ navbar li a:hover {
   background-color: #111;
 }
 
+#star {
+  width: 10px;
+  height: 10px;
+  background-image: url('my-images/star.jpg');
+  transform: rotate(45deg);
+  position: relative;
+  animation: myfirst 10s linear 2s infinite forwards;
+}
+
+@keyframes myfirst {
+  0%   {left:1080px; top:100px;}
+  20%  {left:500px; top:200px;}
+  40%  {left:400px; top:300px;}
+  60%  {left:300px; top:400px;}
+  80%  {left:200px; top:500px;}
+  100% {left:100px; top:1080px;}
+}
