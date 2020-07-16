@@ -1,6 +1,7 @@
 #content {
   margin-left: auto;
   margin-right: auto;
+  margin-top: 1%;
   width: 650px;
 }
 
@@ -11,9 +12,55 @@
 body img {
     height: 300px;
     width: 250px;
+    border-radius: 5%;
+    margin: 5%;
 }
 
 #see-more-projects {
     display: none;
     visibility: hidden;
+}
+
+body {
+    background-color: grey;
+    font-family: 'Bellefair';
+}
+
+img {
+  opacity: 0.9;
+}
+
+img:hover {
+  opacity: 1.2;
+}
+
+#content {
+    color: hsla(0, 0%, 50%);
+    border: 10px solid transparent;
+    padding: 15px;
+    background-color: black;
+}
+
+navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+navbar li {
+  float: left;
+}
+
+navbar li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+navbar li a:hover {
+  background-color: #111;
 }
