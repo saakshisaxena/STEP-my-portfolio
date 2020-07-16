@@ -15,14 +15,43 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+function addFunFact() {
+    const funFacts = ['Jennifer Almost Didn\'t Return For The Final Season',
+    'The Cast Took A Trip To Vegas Before The Premiere',
+    'They Wanted Courteney Cox To Play Rachel',
+    'The Writers Got Creative To Cut Costs',
+    'Gunther Was Actually A Barista'];
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+    const randomFactHeading= '<br> Fun fact about friends 101: <br>';
+    const randomFact= funFacts[Math.floor(Math.random()* funFacts.length)];
 
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+    const factContainer = document.getElementById('fun-fact-container');
+    const factWithHeading = randomFactHeading+randomFact;
+    factContainer.innerHTML = factWithHeading;
+    
 }
+
+var clickShowCount= 0;
+
+function showMoreOrLessProjects() {
+    clickShowCount++;
+    if(clickShowCount%2==0)
+    {
+        const divToShow= document.getElementById('see-more-projects');
+        divToShow.style.visibility= 'hidden';
+        divToShow.style.display= 'none';
+
+        const buttonChangeText= document.getElementById('show-projects');
+        buttonChangeText.innerHTML= "Show more projects";
+    }
+    else {
+        const divToShow= document.getElementById('see-more-projects');
+        divToShow.style.visibility= 'visible';
+        divToShow.style.display= 'block';
+
+        const buttonChangeText= document.getElementById('show-projects');
+        buttonChangeText.innerHTML= "Show less";
+    }
+    
+}
+
