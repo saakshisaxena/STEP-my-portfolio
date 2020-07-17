@@ -1,6 +1,7 @@
 #content {
   margin-left: auto;
   margin-right: auto;
+  margin-top: 1%;
   width: 650px;
 }
 
@@ -11,9 +12,98 @@
 body img {
     height: 300px;
     width: 250px;
+    border-radius: 5%;
+    margin: 5%;
 }
 
 #see-more-projects {
     display: none;
     visibility: hidden;
+}
+
+body {
+    background-color: grey;
+    background-image: url('https://media.giphy.com/media/GC7C2Fi902BDG/giphy.gif');
+    font-family: 'Bellefair';
+    height: 500px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+img:hover {
+  opacity: 1.2;
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+img {
+  opacity: 0.9;
+}
+
+
+#content {
+    color: hsla(0, 0%, 90%, 0.7);
+    border: 10px solid transparent;
+    padding: 15px;
+    background-color: hsla(0, 0%, 0%, 0.5);
+}
+
+navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+navbar li {
+  float: left;
+}
+
+navbar li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+navbar li a:hover {
+  background-color: #111;
+}
+
+#star {
+  width: 10px;
+  height: 10px;
+  background-image: url('my-images/star.jpg');
+  transform: rotate(45deg);
+  position: relative;
+  animation: myfirst 10s linear 0s infinite forwards;
+}
+
+@keyframes myfirst {
+  0%   {left:1080px; top:100px;}
+  20%  {left:500px; top:200px;}
+  40%  {left:400px; top:300px;}
+  60%  {left:300px; top:400px;}
+  80%  {left:200px; top:500px;}
+  100% {left:100px; top:1080px;}
 }
