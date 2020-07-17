@@ -66,6 +66,12 @@ img {
     background-color: hsla(0, 0%, 0%, 0.5);
 }
 
+navbar {
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+}
+
 navbar ul {
   list-style-type: none;
   margin: 0;
