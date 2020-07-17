@@ -23,9 +23,8 @@ body img {
 
 body {
     background-color: grey;
-    font-family: 'Bellefair';
     background-image: url('https://media.giphy.com/media/GC7C2Fi902BDG/giphy.gif');
-    /* Set a specific height */
+    font-family: 'Bellefair';
     height: 500px;
 
     /* Create the parallax scrolling effect */
@@ -97,7 +96,7 @@ navbar li a:hover {
   background-image: url('my-images/star.jpg');
   transform: rotate(45deg);
   position: relative;
-  animation: myfirst 10s linear 2s infinite forwards;
+  animation: myfirst 10s linear 0s infinite forwards;
 }
 
 @keyframes myfirst {
