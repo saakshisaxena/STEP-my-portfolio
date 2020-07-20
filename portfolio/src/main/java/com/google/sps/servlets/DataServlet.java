@@ -21,39 +21,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.Gson;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-/*@WebServlet("/data")
+@WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello Saakshi!</h1>");
-  }
-}*/
+    private ArrayList<String> messages;
 
-/** Servlet that returns a random quote. */
-@WebServlet("/random-quote")
-public final class DataServlet extends HttpServlet {
+    @Override
+    public void init() {
+        messages= new ArrayList<String>();
+        messages.add("Hi! User");
+        messages.add("How are you doing User?");
+        messages.add("What\'s up User?");
+    }
 
-  private List<String> quotes;
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        /*response.setContentType("text/html;");
+        response.getWriter().println("<h1>Hello Saakshi!</h1>");*/
+        
+        //converting ArrayList to json string 
+        Gson gson = new Gson();
+        String json = gson.toJson(messages);
 
-  @Override
-  public void init() {
-    quotes = new ArrayList<>();
-    quotes.add("Jennifer Almost Didn't Return For The Final Season");
-    quotes.add("The Cast Took A Trip To Vegas Before The Premiere");
-    quotes.add("They Wanted Courteney Cox To Play Rachel");
-    quotes.add("The Writers Got Creative To Cut Costs");
-    quotes.add("Gunther Was Actually A Barista");
-  }
-
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String quote = quotes.get((int) (Math.random() * quotes.size()));
-
-    response.setContentType("text/html;");
-    response.getWriter().println(quote);
-  }
+        // Send the JSON as the response
+        response.setContentType("application/json;");
+        response.getWriter().println(json);
+    }
 }

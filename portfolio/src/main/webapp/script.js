@@ -58,3 +58,16 @@ function showMoreOrLessProjects() {
     }
     
 }
+
+function getAndPrintComments() {
+    
+    fetch('/data').then(response => response.json()).then((message) => {
+        var comments = "";
+        for(var i=0; i<message.length; i++){
+            comments+= "<br>"+message[i]+"<hr>";
+            console.log(message[i]);
+        } 
+        document.getElementById('comments-container').innerHTML= "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ comments;
+    });
+    
+}
