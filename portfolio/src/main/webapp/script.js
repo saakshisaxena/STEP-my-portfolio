@@ -18,22 +18,10 @@
 function addFunFact() {
 
     //to fetch quote from the servlet and add it to our home page with a heading using ARROW function
-    fetch('/random-quote').then(response => response.text()).then( (quote)=> {
-        document.getElementById('fun-fact-container').innerText= '\n Fun fact about friends 101: \n' + quote;});
+    fetch('/random-quote').then((response) => response.text()).then( (quote) => {
+        document.getElementById('fun-fact-container').innerText = 
+        "\n Fun fact about friends 101: \n" + quote;});
 
-    //old code without servlet's use
-    /*const funFacts = ['Jennifer Almost Didn\'t Return For The Final Season',
-    'The Cast Took A Trip To Vegas Before The Premiere',
-    'They Wanted Courteney Cox To Play Rachel',
-    'The Writers Got Creative To Cut Costs',
-    'Gunther Was Actually A Barista'];
-
-    const randomFactHeading= '<br> Fun fact about friends 101: <br>';
-    const randomFact= funFacts[Math.floor(Math.random()* funFacts.length)];
-
-    const factContainer = document.getElementById('fun-fact-container');
-    const factWithHeading = randomFactHeading+randomFact;
-    factContainer.innerHTML = factWithHeading;*/  
 }
 
 var clickShowCount= 0;
@@ -61,13 +49,13 @@ function showMoreOrLessProjects() {
 
 function getAndPrintComments() {
     
-    fetch('/data').then(response => response.json()).then((message) => {
+    fetch('/data').then((response) => response.json()).then((message) => {
         var comments = "";
         for(var i=0; i<message.length; i++){
             comments+= "<br>"+message[i]+"<hr>";
             console.log(message[i]);
         } 
-        document.getElementById('comments-container').innerHTML= "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ comments;
+        document.getElementById('comments-container').innerHTML = "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ comments;
     });
     
 }
