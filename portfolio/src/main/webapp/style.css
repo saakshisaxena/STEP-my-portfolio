@@ -118,3 +118,17 @@ navbar li a:hover {
 #comments-container hr {
    border-width: 0.1px;
 }
+
+#button {
+    background-color: hsla(0,0%,0%,0);
+    color: white;
+    margin: 2%;
+}
+
+#text-area {
+    background-color: hsla(0,0%,0%,0);
+    color: white;
+    height: 20px;
+    margin: 2%;
+    width: 500px;
+}
