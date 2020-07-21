@@ -6,20 +6,20 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="getAndPrintComments()">
         <navbar>
             <ul>
                 <li><a href="#about-me">About me</a></li>       
                 <li><a href="gallery.html">Gallery</a></li>
                 <li><a href="#my-projects">My projects</a></li>
+                <li><a href="#comments-container">Comments</a></li>
                 <li><a href="#contact-me">Contact me</a></li>
             </ul>
         </navbar>
         <div id="star"></div>
         <div id="content">
-            <a href="/data"> <h3> Servlet testing </h3> </a>
             <h1>My Portfolio - Saakshi Saxena</h1>
-            <figure >
+            <figure>
                 <img src="my-images/my-pic-1.jpeg" alt="Girl with a pretty background" style="opacity: 1;">
                 <figcaption>Saakshi Saxena</figcaption>
             </figure>
@@ -179,6 +179,15 @@
                             <p>Platforms/ Languages: JavaScript, Bootstrap, CSS, HTML, Github.</p>
                         </p>
                     </div>          
+            </div>
+            <div id="comments-container"></div>
+            <div id="add-comments"> 
+                <form action="/data" method="POST">
+                    <input id="text-area" type="text" name="comment" placeholder="Add your comment here" >
+                    <br>
+                    <input id="button" type="submit" value="Submit">
+                    <input id="button" type="reset">
+                </form>
             </div>
             <p><a href="#content" style="text-align: center; color: cornflowerblue;"> To top </a></p>
         </div>
