@@ -49,13 +49,24 @@ function showMoreOrLessProjects() {
 
 function getAndPrintComments() {
     
-    fetch('/data').then((response) => response.json()).then((message) => {
+    /*fetch('/data').then((response) => response.json()).then((message) => {
         var comments = "";
-        for(var i=0; i<message.length; i++){
-            comments+= "<br>"+message[i]+"<hr>";
-            console.log(message[i]);
+        for(var i=0; i<message.size(); i++){
+            comments+= "<br>"+message.get(i)+"<hr>";
+            console.log(message.get(i));
         } 
         document.getElementById('comments-container').innerHTML = "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ comments;
-    });
+    });*/
     
+    fetch('/data').then((response) => response.json()).then((comments) => {
+        console.log(comments);
+    const commentListElement = document.getElementById('comments-container');
+    var commentsToBeAdded ="";
+    for(var i=0; i<comments.length; i++) {
+        commentsToBeAdded+= "<br>"+comments[i];
+        console.log(commentsToBeAdded);
+    }
+    commentListElement.innerHTML= "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ commentsToBeAdded;
+  });
+
 }

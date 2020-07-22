@@ -119,16 +119,34 @@ navbar li a:hover {
    border-width: 0.1px;
 }
 
+#comments-container {
+    line-height: 5px;
+    margin: 2%;
+}
+
 #button {
     background-color: hsla(0,0%,0%,0);
     color: white;
-    margin: 2%;
+    margin: 3%;
 }
 
 #text-area {
     background-color: hsla(0,0%,0%,0);
     color: white;
     height: 20px;
-    margin: 2%;
+    margin: 3%;
     width: 500px;
+}
+
+#date {
+    font-size: small;
+    text-align: end;
+}
+
+#comment {
+    border-color: grey;
+    border-style: inset;
+    margin: 0.5%;
+    padding: 1%;
+    padding-top: 0;
 }
