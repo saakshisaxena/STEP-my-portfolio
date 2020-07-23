@@ -117,9 +117,9 @@ function createCommentElement(comment) {
 }
 
 /** Tells the server to delete the task. */
-function deleteTask(commentId) {
+function deleteTask(comment) {
   const params = new URLSearchParams();
-  params.append('id', commentId);
+  params.append('id', comment.id);
   fetch('/delete-comment', {method: 'POST', body: params});
 }
 

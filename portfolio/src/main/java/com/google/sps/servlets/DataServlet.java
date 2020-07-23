@@ -31,7 +31,9 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import java.util.*;
 import java.text.*;
-import java.sql.Timestamp;  
+import java.sql.Timestamp;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;  
 
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
@@ -40,25 +42,30 @@ public class DataServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
-        Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-
+        //Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+Query query = new Query("Task");
+System.out.println("query:"+query);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+System.out.println("d:"+datastore);
         PreparedQuery results = datastore.prepare(query);
-
-        ArrayList<Comment> comments = new ArrayList<>();
+System.out.println("r:"+results);
+        List<Comment> comments = new ArrayList<>();
         
         for (Entity entity : results.asIterable()) {
-            long id = entity.getKey().getId();
+            Key id = entity.getKey();
+System.out.println("key:"+entity.getKey());            
             String title = (String) entity.getProperty("title");
-
+System.out.println("id:"+id+" title:"+title);
             long timestamp = (long) entity.getProperty("timestamp");
+System.out.println("timestamp:"+timestamp);
             Date date = new Date(timestamp);
             Format format = new SimpleDateFormat("dd-MM-yyy HH:mm");
             String dateAndTime =format.format(date);
+System.out.println("d&t:"+dateAndTime);
 
             Comment comment = new Comment(id, title, dateAndTime);
             comments.add(comment);
+System.out.println("cArray:"+comments);            
         }
 
         Gson gson = new Gson();
@@ -72,7 +79,7 @@ public class DataServlet extends HttpServlet {
         String comment = request.getParameter("comment");
         long timestamp = System.currentTimeMillis();
 
-        Entity commentEntity = new Entity("Comment");
+        Entity commentEntity = new Entity("Task");
         commentEntity.setProperty("title", comment);
         commentEntity.setProperty("timestamp", timestamp);
 
