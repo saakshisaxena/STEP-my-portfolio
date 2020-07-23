@@ -10,28 +10,27 @@
 }
 
 body img {
-    height: 300px;
-    width: 250px;
-    border-radius: 5%;
-    margin: 5%;
+  height: 300px;
+  width: 250px;
+  border-radius: 5%;
+  margin: 5%;
 }
 
 #see-more-projects {
-    display: none;
-    visibility: hidden;
+  display: none;
+  visibility: hidden;
 }
 
 body {
-    background-color: grey;
-    background-image: url('https://media.giphy.com/media/GC7C2Fi902BDG/giphy.gif');
-    font-family: 'Bellefair';
-    height: 500px;
-
-    /* Create the parallax scrolling effect */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  background-color: grey;
+  background-image: url('https://media.giphy.com/media/GC7C2Fi902BDG/giphy.gif');
+  font-family: 'Bellefair';
+  height: 500px;
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 img:hover {
@@ -60,10 +59,10 @@ img {
 
 
 #content {
-    color: hsla(0, 0%, 90%, 0.7);
-    border: 10px solid transparent;
-    padding: 15px;
-    background-color: hsla(0, 0%, 0%, 0.5);
+  color: hsla(0, 0%, 90%, 0.7);
+  border: 10px solid transparent;
+  padding: 15px;
+  background-color: hsla(0, 0%, 0%, 0.5);
 }
 
 navbar {
@@ -116,37 +115,105 @@ navbar li a:hover {
 }
 
 #comments-container hr {
-   border-width: 0.1px;
+  border-width: 0.1px;
 }
 
 #comments-container {
-    line-height: 5px;
-    margin: 2%;
+  line-height: 5px;
+  margin: 2%;
 }
 
 #button {
-    background-color: hsla(0,0%,0%,0);
-    color: white;
-    margin: 3%;
+  background-color: hsla(0,0%,0%,0);
+  color: white;
+  margin: 3%;
+}
+
+#button:hover, #button:focus {
+  background-color: white;
+  color: black;
 }
 
 #text-area {
-    background-color: hsla(0,0%,0%,0);
-    color: white;
-    height: 20px;
-    margin: 3%;
-    width: 500px;
+  background-color: hsla(0,0%,0%,0);
+  color: white;
+  height: 20px;
+  margin: 3%;
+  width: 500px;
 }
 
 #date {
-    font-size: small;
-    text-align: end;
+  font-size: small;
+  text-align: end;
 }
 
-#comment {
-    border-color: grey;
-    border-style: inset;
-    margin: 0.5%;
-    padding: 1%;
-    padding-top: 0;
+.comment {
+  border-color: grey;
+  border-style: inset;
+  margin: 5%;
+  padding: 2%;
+}
+
+.commentSettings {
+  background: hsla(0,0%,0%,0.5);
+  font-size: small;
+}
+
+.commentSettings:hover, .commentSettings:focus {
+  background-color: white;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  display: block;
+  font-size: small;
+  padding: 12px 16px;
+  text-decoration: none;
+}
+
+.dropdown a:hover {
+  background-color: #ddd;
+}
+
+.show {
+  display: block;
+}
+
+#commentId {
+  display: none;
+  visibility: hidden;  
+}
+
+.delete {
+  background-color: hsla(0,0%,0%,0);
+  color: white;
+  font-size: x-small;
+  margin-left: 3%;
+}
+
+.delete:hover, .delete:focus, .delete-all-button:hover, .delete-all-button:focus {
+  background-color: white;
+  color: black;
+}
+
+.delete-all-button {
+  background-color: hsla(0,0%,0%,0);
+  color: white;
+  font-size: small;
+  margin: 3%;
 }

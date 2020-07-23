@@ -48,25 +48,105 @@ function showMoreOrLessProjects() {
 }
 
 function getAndPrintComments() {
+
+    /*fetch('/data').then((response) => response.json()).then((comments) => {
     
-    /*fetch('/data').then((response) => response.json()).then((message) => {
-        var comments = "";
-        for(var i=0; i<message.size(); i++){
-            comments+= "<br>"+message.get(i)+"<hr>";
-            console.log(message.get(i));
-        } 
-        document.getElementById('comments-container').innerHTML = "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ comments;
-    });*/
-    
-    fetch('/data').then((response) => response.json()).then((comments) => {
-        console.log(comments);
     const commentListElement = document.getElementById('comments-container');
+    const buttonWithDropdown= "<div class='dropdown'>"+
+                    "<p><button class='commentSettings' onclick='commentSettings()'><i></i>&#9881;</button></p>"+
+                    "<div id='myDropdown' class='dropdown-content'>"+
+                        "<a href='#' onclick='deleteAllComments()'>Delete all comments</a>"+
+                        "<a href='#'>Set max no. of comments</a>"+
+                    "</div>"+
+                "</div>";
     var commentsToBeAdded ="";
-    for(var i=0; i<comments.length; i++) {
-        commentsToBeAdded+= "<br>"+comments[i];
-        console.log(commentsToBeAdded);
+    for(const comment of comments) {
+        commentsToBeAdded+= "<br>"+comment;
     }
-    commentListElement.innerHTML= "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ commentsToBeAdded;
+    commentListElement.innerHTML= "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ commentsToBeAdded+ buttonWithDropdown;
+  });*/
+  const ids = new Array();
+  const commentListElement = document.getElementById('comments-container');
+  fetch('/data').then(response => response.json()).then((comments) => {
+    comments.forEach((comment) => {
+      commentListElement.appendChild(createCommentElement(comment));
+      ids.push(comment.id);
+    })
   });
 
+  const commentsDivElement = document.getElementById('comments-div');
+  //Creating a delete all button
+  const deleteAllButtonElement = document.createElement('button');
+  deleteAllButtonElement.innerText = 'Delete all comments';
+  deleteAllButtonElement.className = 'delete-all-button';
+  deleteAllButtonElement.addEventListener('click', () => {
+    for (const commentId of ids)
+    deleteTask(commentId);
+  });
+  commentsDivElement.appendChild(deleteAllButtonElement);
+
+  //creating a settings button
+  var settingsBtn = document.createElement("BUTTON");
+  settingsBtn.innerHTML = "&#9881;";
+  settingsBtn.className = "commentSettings";
+  commentsDivElement.appendChild(settingsBtn);
 }
+
+/** Creates an element that represents a task, including its delete button. */
+function createCommentElement(comment) {
+
+  const commentElement = document.createElement('li');
+  commentElement.className = 'comment';
+
+  const titleElement = document.createElement('span');
+  titleElement.innerText = comment.title;
+
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.className = 'delete';
+  deleteButtonElement.innerText = 'Delete';
+  deleteButtonElement.addEventListener('click', () => {
+    deleteTask(comment.id);
+
+    // Remove the task from the DOM.
+    commentElement.remove();
+  });
+
+  commentElement.appendChild(titleElement);
+  commentElement.appendChild(deleteButtonElement);
+  return commentElement;
+}
+
+/** Tells the server to delete the task. */
+function deleteTask(commentId) {
+  const params = new URLSearchParams();
+  params.append('id', commentId);
+  fetch('/delete-comment', {method: 'POST', body: params});
+}
+
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function commentSettings() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.commentSettings')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+/** Tells the server to delete the task. */
+/*function deleteAllComments(comment) {
+  const params = new URLSearchParams();
+  params.append('commentId', comment.id);
+  console.log(params);
+  fetch('/delete-all-comments', {method: 'POST', body: params});
+}*/
