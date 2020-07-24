@@ -47,26 +47,11 @@ function showMoreOrLessProjects() {
     
 }
 
+const ids = new Array();
 function getAndPrintComments() {
 
-    /*fetch('/data').then((response) => response.json()).then((comments) => {
-    
-    const commentListElement = document.getElementById('comments-container');
-    const buttonWithDropdown= "<div class='dropdown'>"+
-                    "<p><button class='commentSettings' onclick='commentSettings()'><i></i>&#9881;</button></p>"+
-                    "<div id='myDropdown' class='dropdown-content'>"+
-                        "<a href='#' onclick='deleteAllComments()'>Delete all comments</a>"+
-                        "<a href='#'>Set max no. of comments</a>"+
-                    "</div>"+
-                "</div>";
-    var commentsToBeAdded ="";
-    for(const comment of comments) {
-        commentsToBeAdded+= "<br>"+comment;
-    }
-    commentListElement.innerHTML= "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ commentsToBeAdded+ buttonWithDropdown;
-  });*/
-  const ids = new Array();
   const commentListElement = document.getElementById('comments-container');
+
   fetch('/data').then(response => response.json()).then((comments) => {
     comments.forEach((comment) => {
       commentListElement.appendChild(createCommentElement(comment));
@@ -74,22 +59,29 @@ function getAndPrintComments() {
     })
   });
 
-  const commentsDivElement = document.getElementById('comments-div');
-  //Creating a delete all button
-  const deleteAllButtonElement = document.createElement('button');
-  deleteAllButtonElement.innerText = 'Delete all comments';
-  deleteAllButtonElement.className = 'delete-all-button';
-  deleteAllButtonElement.addEventListener('click', () => {
-    for (const commentId of ids)
-    deleteTask(commentId);
-  });
-  commentsDivElement.appendChild(deleteAllButtonElement);
+    document.getElementById("delete-all-button").addEventListener("click", function(){
+        for (const commentId of ids)
+            deleteTask(commentId);
+    });
+    /**Need to work on the on and off buttons*/
+    //const innerTextOfComments = document.getElementById("comments-container").innerText;
+    //console.log(innerTextOfComments);
+    //if(document.getElementById('comments-container').getElementsByTagName('li').length >= 1)
+    //console.log('has li in it');
+    //console.log(document.getElementById('comments-container').getElementsByTagName('li').length );
+    if(innerTextOfComments.length==0) {
+        document.getElementById("delete-all-button").style.visibility="hidden";
+        document.getElementById("delete-all-button").style.display="none";
+        document.getElementById("commentSettings").style.display="none";
+        document.getElementById("commentSettings").style.visibility="hidden";
+    }
+    else {
+        document.getElementById("delete-all-button").style.visibility="visible";
+        document.getElementById("delete-all-button").style.display="inline-block";
+        document.getElementById("commentSettings").style.display="inline-block";
+        document.getElementById("commentSettings").style.visibility="visible"; 
+    }
 
-  //creating a settings button
-  var settingsBtn = document.createElement("BUTTON");
-  settingsBtn.innerHTML = "&#9881;";
-  settingsBtn.className = "commentSettings";
-  commentsDivElement.appendChild(settingsBtn);
 }
 
 /** Creates an element that represents a task, including its delete button. */
@@ -101,16 +93,22 @@ function createCommentElement(comment) {
   const titleElement = document.createElement('span');
   titleElement.innerText = comment.title;
 
+  const timeElement = document.createElement('p');
+  timeElement.className = 'date';
+  var date = new Date(comment.timestamp).toLocaleDateString("en-US");
+  var time = new Date(comment.timestamp).toLocaleTimeString("en-US"); 
+  timeElement.innerHTML = "&#128344;"+date+"&nbsp;"+time;
+
   const deleteButtonElement = document.createElement('button');
   deleteButtonElement.className = 'delete';
   deleteButtonElement.innerText = 'Delete';
   deleteButtonElement.addEventListener('click', () => {
     deleteTask(comment.id);
-
     // Remove the task from the DOM.
     commentElement.remove();
   });
 
+  commentElement.appendChild(timeElement);
   commentElement.appendChild(titleElement);
   commentElement.appendChild(deleteButtonElement);
   return commentElement;
@@ -142,11 +140,3 @@ window.onclick = function(event) {
     }
   }
 }
-
-/** Tells the server to delete the task. */
-/*function deleteAllComments(comment) {
-  const params = new URLSearchParams();
-  params.append('commentId', comment.id);
-  console.log(params);
-  fetch('/delete-all-comments', {method: 'POST', body: params});
-}*/

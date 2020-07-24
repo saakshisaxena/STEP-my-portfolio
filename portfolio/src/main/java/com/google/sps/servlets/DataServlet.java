@@ -21,19 +21,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.Gson;
 import java.util.Arrays;
+import java.sql.Timestamp;
+import com.google.gson.Gson;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import java.util.*;
-import java.text.*;
-import java.sql.Timestamp;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;  
+import com.google.appengine.api.datastore.KeyFactory; 
+import com.google.appengine.api.datastore.FetchOptions;
 
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
@@ -42,30 +41,25 @@ public class DataServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-Query query = new Query("Task");
-System.out.println("query:"+query);
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-System.out.println("d:"+datastore);
-        PreparedQuery results = datastore.prepare(query);
-System.out.println("r:"+results);
-        List<Comment> comments = new ArrayList<>();
-        
-        for (Entity entity : results.asIterable()) {
-            Key id = entity.getKey();
-System.out.println("key:"+entity.getKey());            
-            String title = (String) entity.getProperty("title");
-System.out.println("id:"+id+" title:"+title);
-            long timestamp = (long) entity.getProperty("timestamp");
-System.out.println("timestamp:"+timestamp);
-            Date date = new Date(timestamp);
-            Format format = new SimpleDateFormat("dd-MM-yyy HH:mm");
-            String dateAndTime =format.format(date);
-System.out.println("d&t:"+dateAndTime);
 
-            Comment comment = new Comment(id, title, dateAndTime);
+        Query query = new Query("Task");
+
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        PreparedQuery results = datastore.prepare(query);
+
+        List<Entity> newResults = new ArrayList<Entity>();
+        newResults = results.asList(FetchOptions.Builder.withLimit(5));
+
+
+        List<Comment> comments = new ArrayList<>();
+
+        for (Entity entity : newResults) {
+            Key id = entity.getKey();
+            String title = (String) entity.getProperty("title");
+            long timestamp = (long) entity.getProperty("timestamp");
+
+            Comment comment = new Comment(id, title, timestamp);
             comments.add(comment);
-System.out.println("cArray:"+comments);            
         }
 
         Gson gson = new Gson();
@@ -76,17 +70,18 @@ System.out.println("cArray:"+comments);
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String comment = request.getParameter("comment");
-        long timestamp = System.currentTimeMillis();
 
         Entity commentEntity = new Entity("Task");
-        commentEntity.setProperty("title", comment);
-        commentEntity.setProperty("timestamp", timestamp);
+        
+        if (request.getParameter("comment") == null)
+            response.sendError(response.SC_BAD_REQUEST, "Comment parameter missing");
+        
+        commentEntity.setProperty("title", request.getParameter("comment"));
+        commentEntity.setProperty("timestamp", System.currentTimeMillis());
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(commentEntity);
-        
-        // Redirect back to the HTML page.
         response.sendRedirect("/index.html#add-comments");
-  }
+
+    }
 }

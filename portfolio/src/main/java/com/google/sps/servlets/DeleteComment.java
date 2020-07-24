@@ -17,11 +17,9 @@ public class DeleteComment extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long id = Long.parseLong(request.getParameter("id"));
-System.out.println(id);
     Key commentEntityKey = KeyFactory.createKey("Task",id);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.delete(commentEntityKey);
-System.out.println("Exiting delete comment loop");
   }
 
 }

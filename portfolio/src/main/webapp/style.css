@@ -142,7 +142,7 @@ navbar li a:hover {
   width: 500px;
 }
 
-#date {
+.date {
   font-size: small;
   text-align: end;
 }
@@ -154,12 +154,12 @@ navbar li a:hover {
   padding: 2%;
 }
 
-.commentSettings {
+#commentSettings {
   background: hsla(0,0%,0%,0.5);
   font-size: small;
 }
 
-.commentSettings:hover, .commentSettings:focus {
+#commentSettings:hover, #commentSettings:focus {
   background-color: white;
 }
 
@@ -206,14 +206,20 @@ navbar li a:hover {
   margin-left: 3%;
 }
 
-.delete:hover, .delete:focus, .delete-all-button:hover, .delete-all-button:focus {
+.delete:hover, .delete:focus, #delete-all-button:hover, #delete-all-button:focus {
   background-color: white;
   color: black;
 }
 
-.delete-all-button {
+#delete-all-button {
   background-color: hsla(0,0%,0%,0);
   color: white;
   font-size: small;
   margin: 3%;
+}
+
+#comment-heading {
+  font-size: larger;
+  font-weight: bold;
+  font-style: italic;
 }
