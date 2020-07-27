@@ -180,10 +180,15 @@
                         </p>
                     </div>          
             </div>
-            <div id="comments-container"></div>
+            <div id="comments-div"><br>
+                <p id='comment-heading'> Comments: </p>
+                <ul id="comments-container"></ul>
+                <button id='commentSettings' type="button">&#9881;</button>
+                <button id='delete-all-button' type="button">Delete all comments</button>
+            </div>
             <div id="add-comments"> 
                 <form action="/data" method="POST">
-                    <input id="text-area" type="text" name="comment" placeholder="Add your comment here" >
+                    <input id="text-area" type="text" name="comment" placeholder="Add your comment here" required>
                     <br>
                     <input id="button" type="submit" value="Submit">
                     <input id="button" type="reset">

@@ -47,15 +47,96 @@ function showMoreOrLessProjects() {
     
 }
 
+const ids = new Array();
 function getAndPrintComments() {
-    
-    fetch('/data').then((response) => response.json()).then((message) => {
-        var comments = "";
-        for(var i=0; i<message.length; i++){
-            comments+= "<br>"+message[i]+"<hr>";
-            console.log(message[i]);
-        } 
-        document.getElementById('comments-container').innerHTML = "<br><p style='font-size: larger;'><strong><em> Comments: </em></strong></p>"+ comments;
+
+  const commentListElement = document.getElementById('comments-container');
+
+  fetch('/data').then(response => response.json()).then((comments) => {
+    comments.forEach((comment) => {
+      commentListElement.appendChild(createCommentElement(comment));
+      ids.push(comment.id);
+    })
+  });
+
+    document.getElementById("delete-all-button").addEventListener("click", function(){
+        for (const commentId of ids)
+            deleteTask(commentId);
     });
-    
+    /**Need to work on the on and off buttons*/
+    //const innerTextOfComments = document.getElementById("comments-container").innerText;
+    //console.log(innerTextOfComments);
+    //if(document.getElementById('comments-container').getElementsByTagName('li').length >= 1)
+    //console.log('has li in it');
+    //console.log(document.getElementById('comments-container').getElementsByTagName('li').length );
+    if(innerTextOfComments.length==0) {
+        document.getElementById("delete-all-button").style.visibility="hidden";
+        document.getElementById("delete-all-button").style.display="none";
+        document.getElementById("commentSettings").style.display="none";
+        document.getElementById("commentSettings").style.visibility="hidden";
+    }
+    else {
+        document.getElementById("delete-all-button").style.visibility="visible";
+        document.getElementById("delete-all-button").style.display="inline-block";
+        document.getElementById("commentSettings").style.display="inline-block";
+        document.getElementById("commentSettings").style.visibility="visible"; 
+    }
+
+}
+
+/** Creates an element that represents a task, including its delete button. */
+function createCommentElement(comment) {
+
+  const commentElement = document.createElement('li');
+  commentElement.className = 'comment';
+
+  const titleElement = document.createElement('span');
+  titleElement.innerText = comment.title;
+
+  const timeElement = document.createElement('p');
+  timeElement.className = 'date';
+  var date = new Date(comment.timestamp).toLocaleDateString("en-US");
+  var time = new Date(comment.timestamp).toLocaleTimeString("en-US"); 
+  timeElement.innerHTML = "&#128344;"+date+"&nbsp;"+time;
+
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.className = 'delete';
+  deleteButtonElement.innerText = 'Delete';
+  deleteButtonElement.addEventListener('click', () => {
+    deleteTask(comment.id);
+    // Remove the task from the DOM.
+    commentElement.remove();
+  });
+
+  commentElement.appendChild(timeElement);
+  commentElement.appendChild(titleElement);
+  commentElement.appendChild(deleteButtonElement);
+  return commentElement;
+}
+
+/** Tells the server to delete the task. */
+function deleteTask(comment) {
+  const params = new URLSearchParams();
+  params.append('id', comment.id);
+  fetch('/delete-comment', {method: 'POST', body: params});
+}
+
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function commentSettings() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.commentSettings')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
 }
