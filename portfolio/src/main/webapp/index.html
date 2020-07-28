@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body onload="getAndPrintComments()">
+  <body onload="getAndPrintComments(); fetchBlobstoreUrlAndShowForm();">
         <navbar>
             <ul>
                 <li><a href="#about-me">About me</a></li>       
@@ -199,6 +199,18 @@
                     <br>
                     <input id="button" type="submit" value="Submit">
                     <input id="button" type="reset">
+                </form>
+            </div>
+            <div> 
+                <form id="upload-images" class="hidden" method="POST" enctype="multipart/form-data">
+                    <h3>Upload an image:</h3>
+                    <input type="file" name="image" required>
+                    <br>
+                    <p>Caption:</p>
+                    <textarea id="caption" name="message" required></textarea>
+                    <br>
+                    <br>
+                    <button>Submit</button>
                 </form>
             </div>
             <p><a href="#content" style="text-align: center; color: cornflowerblue;"> To top </a></p>
