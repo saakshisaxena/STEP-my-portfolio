@@ -15,8 +15,8 @@
 /**
  * Adds a random greeting to the page.
  */
-function addFunFact() {
 
+function addFunFact() {
     //to fetch quote from the servlet and add it to our home page with a heading using ARROW function
     fetch('/random-quote').then((response) => response.text()).then( (quote) => {
         document.getElementById('fun-fact-container').innerText = 
@@ -47,46 +47,49 @@ function showMoreOrLessProjects() {
     
 }
 
+
 const ids = new Array();
-function getAndPrintComments() {
-
+function getAndPrintComments(){
   const commentListElement = document.getElementById('comments-container');
+  const maxComments = getMaxComments();
 
-  fetch('/data').then(response => response.json()).then((comments) => {
+  fetch('/data?maxcomments=' + maxComments).then(response => response.json()).then((comments) => {
+    if(comments.length==0) {
+        getAndSetDeleteAllButton(true);
+    }
+    else {
+        getAndSetDeleteAllButton(false);
+    }
     comments.forEach((comment) => {
       commentListElement.appendChild(createCommentElement(comment));
       ids.push(comment.id);
     })
   });
+}
 
+function getAndSetDeleteAllButton(noCommentsFlag){
     document.getElementById("delete-all-button").addEventListener("click", function(){
         for (const commentId of ids)
             deleteTask(commentId);
     });
-    /**Need to work on the on and off buttons*/
-    //const innerTextOfComments = document.getElementById("comments-container").innerText;
-    //console.log(innerTextOfComments);
-    //if(document.getElementById('comments-container').getElementsByTagName('li').length >= 1)
-    //console.log('has li in it');
-    //console.log(document.getElementById('comments-container').getElementsByTagName('li').length );
-    if(innerTextOfComments.length==0) {
+
+    if(noCommentsFlag == false) {
+        document.getElementById("delete-all-button").style.visibility="visible";
+        document.getElementById("delete-all-button").style.display="inline-block";
+        document.getElementById("commentSettings").style.display="inline-block";
+        document.getElementById("commentSettings").style.visibility="visible";
+    }
+    else {
+        document.getElementById("comments-container").innerHTML="<p>No Comments</p>";
         document.getElementById("delete-all-button").style.visibility="hidden";
         document.getElementById("delete-all-button").style.display="none";
         document.getElementById("commentSettings").style.display="none";
         document.getElementById("commentSettings").style.visibility="hidden";
     }
-    else {
-        document.getElementById("delete-all-button").style.visibility="visible";
-        document.getElementById("delete-all-button").style.display="inline-block";
-        document.getElementById("commentSettings").style.display="inline-block";
-        document.getElementById("commentSettings").style.visibility="visible"; 
-    }
-
 }
 
 /** Creates an element that represents a task, including its delete button. */
 function createCommentElement(comment) {
-
   const commentElement = document.createElement('li');
   commentElement.className = 'comment';
 
@@ -115,28 +118,29 @@ function createCommentElement(comment) {
 }
 
 /** Tells the server to delete the task. */
-function deleteTask(comment) {
+function deleteTask(commentId) {
   const params = new URLSearchParams();
-  params.append('id', comment.id);
+  params.append('id', commentId);
   fetch('/delete-comment', {method: 'POST', body: params});
+  window.location.replace("index.html");
 }
 
-/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
 function commentSettings() {
-  document.getElementById("myDropdown").classList.toggle("show");
+  document.getElementById("dropdown-content").style.visibility = "visible"; 
+  document.getElementById("dropdown-content").style.display = "inline-block"; 
+}  
+
+function sendForm() {
+  window.location.replace("index.html?maxcomments="+ document.getElementById('quantity').value );
 }
 
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.commentSettings')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
+function getMaxComments() {
+    const defaultValue = 15;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if(urlParams.get('maxComments') == null)
+        return defaultValue;
+
+    else
+        return(urlParams.get('maxComments'));
 }
