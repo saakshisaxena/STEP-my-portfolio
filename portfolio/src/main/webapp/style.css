@@ -199,3 +199,24 @@ navbar li a:hover {
   font-weight: bold;
   font-style: italic;
 }
+
+/* Upload images form is hidden by default. */
+.hidden {
+  display: none;
+}
+
+button {
+  background-color: hsla(0,0%,0%,0);
+  color: white;
+  margin: 3%;
+}
+
+button:hover, button:focus {
+  background-color: white;
+  color: black;
+}
+
+#caption {
+  background-color: hsla(0,0%,0%,0.5);
+  color: white;
+}
