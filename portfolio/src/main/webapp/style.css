@@ -119,8 +119,10 @@ navbar li a:hover {
 }
 
 #comments-container {
+  height: 250px;
   line-height: 5px;
   margin: 2%;
+  overflow: auto;
 }
 
 #button {
@@ -163,35 +165,9 @@ navbar li a:hover {
   background-color: white;
 }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
+#dropdown-content {
   display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  display: block;
-  font-size: small;
-  padding: 12px 16px;
-  text-decoration: none;
-}
-
-.dropdown a:hover {
-  background-color: #ddd;
-}
-
-.show {
-  display: block;
+  visibility: hidden;  
 }
 
 #commentId {

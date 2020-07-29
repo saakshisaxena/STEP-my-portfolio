@@ -14,26 +14,25 @@
 
 package com.google.sps.servlets;
 
-import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Arrays;
 import java.sql.Timestamp;
 import com.google.gson.Gson;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory; 
-import com.google.appengine.api.datastore.FetchOptions;
-
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -41,23 +40,22 @@ public class DataServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
-        Query query = new Query("Task");
+        if (request.getParameter("maxcomments") == null)
+        response.sendError(response.SC_BAD_REQUEST, "maxComment parameter missing");
+
+        int maxcomments = Integer.parseInt(request.getParameter("maxcomments"));
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        PreparedQuery results = datastore.prepare(query);
-
-        List<Entity> newResults = new ArrayList<Entity>();
-        newResults = results.asList(FetchOptions.Builder.withLimit(5));
-
+        List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(maxcomments));
 
         List<Comment> comments = new ArrayList<>();
 
-        for (Entity entity : newResults) {
-            Key id = entity.getKey();
+        for (Entity entity : results) {
+            long id = entity.getKey().getId();
             String title = (String) entity.getProperty("title");
             long timestamp = (long) entity.getProperty("timestamp");
-
             Comment comment = new Comment(id, title, timestamp);
             comments.add(comment);
         }
@@ -70,18 +68,16 @@ public class DataServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Entity commentEntity = new Entity("Comment");
 
-        Entity commentEntity = new Entity("Task");
-        
         if (request.getParameter("comment") == null)
             response.sendError(response.SC_BAD_REQUEST, "Comment parameter missing");
-        
+
         commentEntity.setProperty("title", request.getParameter("comment"));
         commentEntity.setProperty("timestamp", System.currentTimeMillis());
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(commentEntity);
         response.sendRedirect("/index.html#add-comments");
-
     }
 }

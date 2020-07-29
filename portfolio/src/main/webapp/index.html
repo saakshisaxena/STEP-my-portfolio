@@ -183,7 +183,14 @@
             <div id="comments-div"><br>
                 <p id='comment-heading'> Comments: </p>
                 <ul id="comments-container"></ul>
-                <button id='commentSettings' type="button">&#9881;</button>
+                <button id='commentSettings' type="button" onclick="commentSettings()">&#9881;</button>
+                <div id="dropdown-content">
+                    <form name="enterMaxComments" onsubmit="return sendForm()">
+                        <label for="quantity">Set maximum number of comment:</label>
+                        <input type="number" id="quantity" name="maxComments" min="1" max="5">
+                        <input type="submit" value="Apply">
+                    </form>
+                </div>
                 <button id='delete-all-button' type="button">Delete all comments</button>
             </div>
             <div id="add-comments"> 
