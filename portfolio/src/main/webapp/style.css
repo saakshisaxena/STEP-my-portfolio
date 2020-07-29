@@ -156,6 +156,11 @@ navbar li a:hover {
   padding: 2%;
 }
 
+.image {
+  margin: 5%;
+  padding: 2%;
+}
+
 #commentSettings {
   background: hsla(0,0%,0%,0.5);
   font-size: small;
@@ -195,6 +200,16 @@ navbar li a:hover {
 }
 
 #comment-heading {
+  font-size: larger;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.caption {
+  font-style: italic; 
+}
+
+#image-heading {
   font-size: larger;
   font-weight: bold;
   font-style: italic;

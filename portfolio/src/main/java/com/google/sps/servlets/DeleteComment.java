@@ -21,5 +21,4 @@ public class DeleteComment extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.delete(commentEntityKey);
   }
-
 }
