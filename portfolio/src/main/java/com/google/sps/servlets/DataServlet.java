@@ -14,16 +14,6 @@
 
 package com.google.sps.servlets;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
-import java.sql.Timestamp;
-import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -33,22 +23,43 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+    private final int defaultMaxComments = 15;
+
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+        int max_comments;
+        if (request.getParameter("maxComments") == null) {
+            response.sendError(response.SC_BAD_REQUEST, "maxComment parameter missing");
+            max_comments = defaultMaxComments;
+        }
 
-        if (request.getParameter("maxcomments") == null)
-        response.sendError(response.SC_BAD_REQUEST, "maxComment parameter missing");
-
-        int maxcomments = Integer.parseInt(request.getParameter("maxcomments"));
+        try{
+            max_comments = Integer.parseInt(request.getParameter("maxComments"));
+        } catch(NumberFormatException e) {
+            response.sendError(response.SC_BAD_REQUEST, "Value entered in \'Set maximum number of comment\' is not a number!");
+            max_comments = defaultMaxComments;
+        }
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(maxcomments));
+        ImmutableList<Entity> results = ImmutableList.copyOf(datastore.prepare(query).asList(FetchOptions.Builder.withLimit(max_comments))); 
 
         List<Comment> comments = new ArrayList<>();
 
@@ -63,7 +74,6 @@ public class DataServlet extends HttpServlet {
         Gson gson = new Gson();
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(comments));
-
     }
 
     @Override

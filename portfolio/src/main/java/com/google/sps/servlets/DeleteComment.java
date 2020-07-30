@@ -15,11 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 public class DeleteComment extends HttpServlet {
 
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {  
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long id = Long.parseLong(request.getParameter("id"));
     Key commentEntityKey = KeyFactory.createKey("Comment",id);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.delete(commentEntityKey);
   }
-
 }

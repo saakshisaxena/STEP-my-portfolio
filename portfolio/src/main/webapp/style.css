@@ -156,6 +156,11 @@ navbar li a:hover {
   padding: 2%;
 }
 
+.image {
+  margin: 5%;
+  padding: 2%;
+}
+
 #commentSettings {
   background: hsla(0,0%,0%,0.5);
   font-size: small;
@@ -198,4 +203,35 @@ navbar li a:hover {
   font-size: larger;
   font-weight: bold;
   font-style: italic;
+}
+
+.caption {
+  font-style: italic; 
+}
+
+#image-heading {
+  font-size: larger;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Upload images form is hidden by default. */
+.hidden {
+  display: none;
+}
+
+button {
+  background-color: hsla(0,0%,0%,0);
+  color: white;
+  margin: 3%;
+}
+
+button:hover, button:focus {
+  background-color: white;
+  color: black;
+}
+
+#caption {
+  background-color: hsla(0,0%,0%,0.5);
+  color: white;
 }
