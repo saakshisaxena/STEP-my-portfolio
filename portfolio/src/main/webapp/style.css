@@ -125,13 +125,13 @@ navbar li a:hover {
   overflow: auto;
 }
 
-#button {
+.button {
   background-color: hsla(0,0%,0%,0);
   color: white;
   margin: 3%;
 }
 
-#button:hover, #button:focus {
+.button:hover, .button:focus {
   background-color: white;
   color: black;
 }
@@ -234,4 +234,9 @@ button:hover, button:focus {
 #caption {
   background-color: hsla(0,0%,0%,0.5);
   color: white;
+}
+
+.contact-me-icon {
+  height:100px;
+  width:100px;
 }
