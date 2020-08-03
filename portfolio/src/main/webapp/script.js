@@ -33,7 +33,7 @@ function showMoreOrLessProjects() {
     divToShow.style.display= 'none';
 
     const buttonChangeText= document.getElementById('show-projects');
-    buttonChangeText.innerHTML= 'Show more projects';
+    buttonChangeText.innerHTML= 'Show more';
   } else {
     const divToShow= document.getElementById('see-more-projects');
     divToShow.style.display= 'block';
@@ -57,17 +57,17 @@ function getAndPrintComments() {
       'Accept': 'application/json',
     },
   })
-    .then((response) => response.json()).then((comments) => {
+      .then((response) => response.json()).then((comments) => {
         if (comments.length==0) {
-            getAndSetDeleteAllButton(true);
+          getAndSetDeleteAllButton(true);
         } else {
-            getAndSetDeleteAllButton(false);
+          getAndSetDeleteAllButton(false);
         }
         comments.forEach((comment) => {
-            commentListElement.appendChild(createCommentElement(comment));
-            ids.push(comment.id);
+          commentListElement.appendChild(createCommentElement(comment));
+          ids.push(comment.id);
         });
-    });
+      });
 }
 
 /** Make the settings and delete-all button visible
@@ -97,8 +97,8 @@ function createCommentElement(comment) {
   const commentElement = document.createElement('li');
   commentElement.className = 'comment';
 
-  const titleElement = document.createElement('span');
-  titleElement.innerHTML = comment.title;
+  const messageElement = document.createElement('span');
+  messageElement.innerHTML = comment.message;
   const timeElement = document.createElement('p');
   timeElement.className = 'date';
   const date = new Date(comment.timestamp).toLocaleDateString('en-US');
@@ -115,7 +115,7 @@ function createCommentElement(comment) {
   });
 
   commentElement.appendChild(timeElement);
-  commentElement.appendChild(titleElement);
+  commentElement.appendChild(messageElement);
   commentElement.appendChild(deleteButtonElement);
   return commentElement;
 }
@@ -129,9 +129,15 @@ function deleteTask(commentId) {
   window.location.replace('index.html');
 }
 
+let SettingsToggleFlag = 0;
 /** Onclicking the commentSettigns button show the dropdown-content */
 function commentSettings() {
-  document.getElementById('dropdown-content').style.display = 'inline-block';
+  SettingsToggleFlag++;
+  if (SettingsToggleFlag % 2 == 0) {
+    document.getElementById('dropdown-content').style.display = 'none';
+  } else {
+    document.getElementById('dropdown-content').style.display = 'inline-block';
+  }
 }
 
 /** Reload along with posting the maxComments to url,
@@ -178,27 +184,28 @@ function getAndShowImages() {
       'Accept': 'application/json',
     },
   })
-    .then((response) => response.json()).then((imageDetails) => {
-    if (imageDetails.length==0) {
-        imageListElement.innerText = 'No images';
-    } else {
-        imageDetails.forEach((imageDetail) => {
-        imageListElement.appendChild(createImageElement(imageDetail));
-        });
-    }
-    });
+      .then((response) => response.json()).then((imageDetails) => {
+        if (imageDetails.length==0) {
+          imageListElement.innerText = 'No images';
+        } else {
+          imageDetails.forEach((imageDetail) => {
+            imageListElement.appendChild(createImageElement(imageDetail));
+          });
+        }
+      });
 }
 
 /** Creating an image element when imageDetail is passed to it
 from the getAndShowImages function*/
 function createImageElement(imageDetail) {
   const imageElement = document.createElement('li');
-  imageElement.className = 'image';
+  imageElement.className = 'image-element';
 
   const blobstoreKey = imageDetail.blobKey;
   const imageUrl= '/get-image-url?blob-key='+blobstoreKey;
 
   const myImg = document.createElement('IMG');
+  myImg.className = 'image';
   myImg.setAttribute('src', imageUrl);
   myImg.setAttribute('width', '250');
   myImg.setAttribute('height', '300');

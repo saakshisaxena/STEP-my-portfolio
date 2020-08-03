@@ -10,15 +10,14 @@
 }
 
 body img {
-  height: 300px;
-  width: 250px;
+  height: 275px;
+  width: 225px;
   border-radius: 5%;
   margin: 5%;
 }
 
 #see-more-projects {
   display: none;
-  visibility: hidden;
 }
 
 body {
@@ -34,9 +33,12 @@ body {
 }
 
 img:hover {
-  opacity: 1.2;
+  /*opacity: 1.2;
   animation: shake 0.5s;
-  animation-iteration-count: infinite;
+  animation-iteration-count: infinite;*/
+  height: 300px;
+  width: 250px;
+  border: outset;
 }
 
 @keyframes shake {
@@ -156,9 +158,19 @@ navbar li a:hover {
   padding: 2%;
 }
 
-.image {
+.image-element {
   margin: 5%;
   padding: 2%;
+}
+
+.image {
+  height: 300px;
+  width: 450px;
+}
+
+.image:hover {
+  height: 325px;
+  width: 475px;
 }
 
 #commentSettings {
@@ -172,12 +184,10 @@ navbar li a:hover {
 
 #dropdown-content {
   display: none;
-  visibility: hidden;  
 }
 
 #commentId {
   display: none;
-  visibility: hidden;  
 }
 
 .delete {
@@ -239,4 +249,9 @@ button:hover, button:focus {
 .contact-me-icon {
   height:100px;
   width:100px;
+}
+
+.contact-me-icon:hover {
+  height:110px;
+  width:110px;
 }

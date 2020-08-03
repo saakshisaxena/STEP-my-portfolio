@@ -14,8 +14,6 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.blobstore.BlobInfo;
-import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -42,9 +40,6 @@ public class FormHandlerServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the message entered by the user.
-    String message = request.getParameter("message");
-
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get("image");
 
@@ -55,12 +50,12 @@ public class FormHandlerServlet extends HttpServlet {
     // Storing the image Keys and messages in Datastore
     Entity imageEntity = new Entity("Image");
     imageEntity.setProperty("blobKey", blobKey_String);
-    imageEntity.setProperty("message", message);
+    imageEntity.setProperty("message", request.getParameter("message"));
     imageEntity.setProperty("timestamp", System.currentTimeMillis());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(imageEntity);
-    response.sendRedirect("/index.html#upload-images");
+    response.sendRedirect("/index.html#images-div");
   }
 
   @Override

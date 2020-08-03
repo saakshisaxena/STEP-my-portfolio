@@ -43,43 +43,22 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    int max_comments = defaultMaxComments;
-
-    /** As I would be sending maxComents and languageCode parameters sometimes together 
-    sometimes separately, so even if the maxComments parameter is null, display default value of comments.
-    And when the user wants to set maxComments then by using the form and js sepcs it will give the custom value. */
-    if (request.getParameter("maxComments") == null || request.getParameter("maxComments").equals("")) {
-      max_comments = defaultMaxComments;
-    } else {
-      try {
-        max_comments = Integer.parseInt(request.getParameter("maxComments"));
-      } catch (NumberFormatException e) {
-        response.sendError(
-            response.SC_BAD_REQUEST,
-            "Value entered in \'Set maximum number of comment\' is not a number!");
-      }
-    }
-
-    String languageCode;
-    if (request.getParameter("languageCode") == null
-        || request.getParameter("languageCode") == "") {
-      languageCode = defaultLanguageCode;
-    } else {
-      languageCode = request.getParameter("languageCode");
-    }
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     ImmutableList<Entity> results =
         ImmutableList.copyOf(
-            datastore.prepare(query).asList(FetchOptions.Builder.withLimit(max_comments)));
+            datastore
+                .prepare(query)
+                .asList(FetchOptions.Builder.withLimit(getMaxComments(request, response))));
 
     List<Comment> comments = new ArrayList<>();
 
     for (Entity entity : results) {
       long id = entity.getKey().getId();
-      String title = getTranslatedComment((String) entity.getProperty("title"), languageCode);
+      String message =
+          getTranslatedComment((String) entity.getProperty("message"), getLanguageCode(request));
       long timestamp = (long) entity.getProperty("timestamp");
-      Comment comment = new Comment(id, title, timestamp);
+      Comment comment = new Comment(id, message, timestamp);
       comments.add(comment);
     }
 
@@ -91,20 +70,50 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Entity commentEntity = new Entity("Comment");
+    if (request.getParameter("comment") != null) {
+      Entity commentEntity = new Entity("Comment");
+      commentEntity.setProperty("message", request.getParameter("comment"));
+      commentEntity.setProperty("timestamp", System.currentTimeMillis());
 
-    if (request.getParameter("comment") == null)
-      response.sendError(response.SC_BAD_REQUEST, "Comment parameter missing");
-
-    commentEntity.setProperty("title", request.getParameter("comment"));
-    commentEntity.setProperty("timestamp", System.currentTimeMillis());
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
-    response.sendRedirect("/index.html#add-comments");
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
+      response.sendRedirect("/index.html#add-comments");
+    } else response.sendError(response.SC_BAD_REQUEST, "Comment parameter missing");
   }
 
-  public String getTranslatedComment(String originalText, String languageCode) {
+  private int getMaxComments(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    int max_comments = defaultMaxComments;
+
+    /**
+     * As I would be sending maxComents and languageCode parameters sometimes together sometimes
+     * separately, so even if the maxComments parameter is null, display default value of comments.
+     * And when the user wants to set maxComments then by using the form and js sepcs it will give
+     * the custom value.
+     */
+    if (request.getParameter("maxComments") != null
+        && !request.getParameter("maxComments").equals("")) {
+      try {
+        max_comments = Integer.parseInt(request.getParameter("maxComments"));
+      } catch (NumberFormatException e) {
+        response.sendError(
+            response.SC_BAD_REQUEST,
+            "Value entered in \'Set maximum number of comment\' is not a number!");
+      }
+    }
+    return max_comments;
+  }
+
+  private String getLanguageCode(HttpServletRequest request) {
+    String languageCode = defaultLanguageCode;
+    if (request.getParameter("languageCode") != null
+        && request.getParameter("languageCode") != "") {
+      languageCode = request.getParameter("languageCode");
+    }
+    return languageCode;
+  }
+
+  private String getTranslatedComment(String originalText, String languageCode) {
     // Doing the translation.
     Translate translate = TranslateOptions.getDefaultInstance().getService();
     Translation translation =
