@@ -206,6 +206,24 @@
                     <input class="button" type="reset">
                 </form>
             </div>
+            <div id="translation-div">
+                <h2>Translation</h2>
+                <p>Select a language, then click translate to get a translation of all the comments.</p>
+
+                <select id="language" required>
+                <option value="en">English</option>
+                <option value="zh">Chinese</option>
+                <option value="es">Spanish</option>
+                <option value="hi">Hindi</option>
+                <option value="ar">Arabic</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="ko">Korean</option>
+                </select>
+
+                <button onclick="requestTranslation();">Translate</button>
+
+            </div>
             <br>
             <div id="images-div">
                 <p id='image-heading'> Images: </p>
@@ -224,26 +242,7 @@
                     <button>Submit</button>
                 </form>
             </div>
-            <div id="translation-div">
-                <h2>Translation</h2>
-                <p>Select a language, then click translate to get a translation of all the comments.</p>
-
-                <select id="language" required>
-                <option value="en">English</option>
-                <option value="zh">Chinese</option>
-                <option value="es">Spanish</option>
-                <option value="hi">Hindi</option>
-                <option value="ar">Arabic</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="ko">Korean</option>
-                </select>
-
-                <button onclick="requestTranslation();">Translate</button>
-
-                <hr/>
-            </div>
-
+            <hr/>
             <p><a href="#content" style="text-align: center; color: cornflowerblue;"> To top </a></p>
         </div>
   </body>
