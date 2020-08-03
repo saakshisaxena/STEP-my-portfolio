@@ -33,6 +33,7 @@ body {
 }
 
 img:hover {
+  opacity: 1.2;
   height: 300px;
   width: 250px;
   border: outset;
