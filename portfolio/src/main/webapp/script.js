@@ -144,8 +144,8 @@ function commentSettings() {
 when user selects the no. of comments he wants to see. */
 function sendForm() {
   window.location.replace('index.html?maxComments='+
-  document.getElementById('quantity').value+'&languageCode='+
-  document.getElementById('language').value);
+    document.getElementById('quantity').value+'&languageCode='+
+    document.getElementById('language').value);
 }
 
 /** Set the default value to maxComments when
@@ -235,8 +235,8 @@ function createImageElement(imageDetail) {
  it reloads the page with the requested language code */
 function requestTranslation() {
   window.location.replace('index.html?maxComments='+
-  document.getElementById('quantity').value+'&languageCode='+
-  document.getElementById('language').value+'#comments-div');
+    document.getElementById('quantity').value+'&languageCode='+
+    document.getElementById('language').value+'#comments-div');
 }
 
 /** To set the value of language code to translate text of comments*/

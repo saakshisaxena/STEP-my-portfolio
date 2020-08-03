@@ -83,7 +83,7 @@ public class DataServlet extends HttpServlet {
 
   private int getMaxComments(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    int max_comments = defaultMaxComments;
+    int maxComments = defaultMaxComments;
 
     /**
      * As I would be sending maxComents and languageCode parameters sometimes together sometimes
@@ -94,14 +94,14 @@ public class DataServlet extends HttpServlet {
     if (request.getParameter("maxComments") != null
         && !request.getParameter("maxComments").equals("")) {
       try {
-        max_comments = Integer.parseInt(request.getParameter("maxComments"));
+        maxComments = Integer.parseInt(request.getParameter("maxComments"));
       } catch (NumberFormatException e) {
         response.sendError(
             response.SC_BAD_REQUEST,
             "Value entered in \'Set maximum number of comment\' is not a number!");
       }
     }
-    return max_comments;
+    return maxComments;
   }
 
   private String getLanguageCode(HttpServletRequest request) {
