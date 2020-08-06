@@ -44,14 +44,16 @@ function showMoreOrLessProjects() {
 }
 
 const ids = new Array();
-/** To fetch comments from /data servlet and
+/** To fetch comments from /comments-data servlet and
 add the settings and delete-all button
 depending on whether there are 0 or more comments */
 function getAndPrintComments() {
   const commentListElement = document.getElementById('comments-container');
   const maxComments = getMaxComments();
   const languageCode = getLanguageCode();
-  fetch('/data?maxComments='+ maxComments+'&languageCode='+languageCode, {
+  fetch('/comments-data?maxComments='+
+    maxComments+'&languageCode='+
+    languageCode, {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

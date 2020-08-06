@@ -35,8 +35,11 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/my-image-servlet")
 public class FormHandlerServlet extends HttpServlet {
+  private final BlobstoreService blobstoreService;
 
-  private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  public FormHandlerServlet() {
+    blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

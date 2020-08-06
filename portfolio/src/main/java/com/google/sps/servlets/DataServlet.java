@@ -33,18 +33,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
+/** Servlet to handle comments data */
+@WebServlet("/comments-data")
 public class DataServlet extends HttpServlet {
 
-  private final int defaultMaxComments = 15;
-  private final String defaultLanguageCode = "en";
+  private static final int defaultMaxCommentsNum = 15;
+  private static final String defaultLanguageCode = "en";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
     ImmutableList<Entity> results =
         ImmutableList.copyOf(
             datastore
@@ -78,16 +79,18 @@ public class DataServlet extends HttpServlet {
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
       response.sendRedirect("/index.html#add-comments");
-    } else response.sendError(response.SC_BAD_REQUEST, "Comment parameter missing");
+    } else {
+      response.sendError(response.SC_BAD_REQUEST, "Comment parameter missing");
+    }
   }
 
   private int getMaxComments(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    int maxComments = defaultMaxComments;
+    int maxComments = defaultMaxCommentsNum;
 
     /**
      * As I would be sending maxComents and languageCode parameters sometimes together sometimes
-     * separately, so even if the maxComments parameter is null, display default value of comments.
+     * separately, so even if the maxComments parameter is null, display default number of comments.
      * And when the user wants to set maxComments then by using the form and js sepcs it will give
      * the custom value.
      */
