@@ -23,35 +23,45 @@ public final class FindMeetingQuery {
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
-    //The total (common) free time we have to conduct the meeting. 
+    // The total (common) free time we have to conduct the meeting.
     ArrayList<TimeRange> free_time = new ArrayList<TimeRange>();
     free_time.addAll(Arrays.asList(TimeRange.WHOLE_DAY));
 
     int meeting_duration = (int) request.getDuration();
-    
-    //If duration of the meeting is greater than a whole day, then return an empty list.
+
+    // If duration of the meeting is greater than a whole day, then return an empty list.
     if (meeting_duration > TimeRange.WHOLE_DAY.duration()) {
       return Arrays.asList();
     }
 
-    //If there are no attendees then return the whole day (ie the free time we have till now).
+    // If there are no attendees then return the whole day (ie the free time we have till now).
     if (request.getAttendees().isEmpty()) {
       return free_time;
     }
 
-    /**Go through every event. If an event has attendees of the requested meeting,
-     * then check if the time overlaps with our free time.
-     * If yes then remove that conflicted time slot from our free time.*/ 
+    /**
+     * Go through every event. If an event has attendees of the requested meeting, then check if the
+     * time overlaps with our free time. If yes then remove that conflicted time slot from our free
+     * time.
+     */
     for (Event event : events) {
       if (!Collections.disjoint(new ArrayList<>(request.getAttendees()), event.getAttendees())) {
         int conflicted_slot_index = containsEvent(free_time, event.getWhen());
         if (conflicted_slot_index != -1) {
-          free_time = getNewFreeTime(free_time.get(conflicted_slot_index), event.getWhen(), free_time);
+          while(conflicted_slot_index < free_time.size()) {
+            //loop through free time slots till the event ends and remove it from our free time.
+            TimeRange free_slot = free_time.get(conflicted_slot_index);
+            free_time =
+                getNewFreeTime(free_slot, event.getWhen(), free_time, conflicted_slot_index);
+            conflicted_slot_index++;
+            //break if the event ends in one of the free slots
+            if (event.getWhen().end() < free_slot.end()) break;
+          }
         }
       }
     }
 
-    // If any of the TimeRange in our freetime list has a 
+    // If any of the TimeRange in our freetime list has a
     // duration less than the requested meeting duration then remove that slot.
     free_time = checkDuration(free_time, meeting_duration);
 
@@ -59,7 +69,7 @@ public final class FindMeetingQuery {
   }
 
   // This method checks if an event overlaps with any of our free time slots.
-  // It returns the conflicted slot's 
+  // It returns the conflicted slot's
   private int containsEvent(ArrayList<TimeRange> free_time, TimeRange event_timerange) {
     for (TimeRange slot : free_time) {
       if (slot.overlaps(event_timerange)) return free_time.indexOf(slot);
@@ -67,11 +77,16 @@ public final class FindMeetingQuery {
     return -1;
   }
 
-  /** This method free time , conflicted free time slot and current event which we are looping through
-   * and checks all conditions in which they could overlap.
-   * Then returns the free time minus overlapping part. */
+  /**
+   * This method free time , conflicted free time slot and current event which we are looping
+   * through and checks all conditions in which they could overlap. Then returns the free time minus
+   * overlapping part.
+   */
   private ArrayList<TimeRange> getNewFreeTime(
-      TimeRange free_slot, TimeRange event_slot, ArrayList<TimeRange> free_time) {
+      TimeRange free_slot,
+      TimeRange event_slot,
+      ArrayList<TimeRange> free_time,
+      int conflicted_slot_index) {
 
     int free_slot_start = free_slot.start();
     int free_slot_end = free_slot.end();
@@ -83,8 +98,8 @@ public final class FindMeetingQuery {
     // Event slot:    |-------|
     if (event_slot_start < free_slot_start && event_slot_end > free_slot_end) {
       free_time.remove(free_slot);
-    } 
-    
+    }
+
     // Case: Free time: |--------|
     // Event slot:     |-----|
     // or
@@ -92,37 +107,43 @@ public final class FindMeetingQuery {
     // |--|
     else if (event_slot_start <= free_slot_start && event_slot_end < free_slot_end) {
       free_time.remove(free_slot);
-      free_time.addAll(Arrays.asList(TimeRange.fromStartEnd(event_slot_end, free_slot_end, false)));
-    } 
-    
+      free_time.addAll(
+          conflicted_slot_index,
+          Arrays.asList(TimeRange.fromStartEnd(event_slot_end, free_slot_end, false)));
+    }
+
     // Case: Free time: |--------|
     // Event slot:            |-----|
     // or
     // |------|
-    //     |--|    
+    //     |--|
     else if (event_slot_start > free_slot_start && event_slot_end >= free_slot_end) {
       free_time.remove(free_slot);
       free_time.addAll(
+          conflicted_slot_index,
           Arrays.asList(TimeRange.fromStartEnd(free_slot_start, event_slot_start, false)));
-    } 
-    
+    }
+
     // Case: Free time: |--------|
-    // Event slot:        |-----|    
+    // Event slot:        |-----|
     else if (event_slot_start > free_slot_start && event_slot_end < free_slot_end) {
       free_time.remove(free_slot);
       free_time.addAll(
+          conflicted_slot_index,
           Arrays.asList(
               TimeRange.fromStartEnd(free_slot_start, event_slot_start, false),
               TimeRange.fromStartEnd(event_slot_end, free_slot_end, false)));
     }
 
-    //else return the original free time
+    // else return the original free time
     return free_time;
   }
 
-  /** This method checks the duration of each free time slot compares it to the requested meeting duration.
-   * If the free time slot can not accommodate the meeting duration then
-   * it removes that free time slot from the options (ie free time) */
+  /**
+   * This method checks the duration of each free time slot compares it to the requested meeting
+   * duration. If the free time slot can not accommodate the meeting duration then it removes that
+   * free time slot from the options (ie free time)
+   */
   private ArrayList<TimeRange> checkDuration(ArrayList<TimeRange> free_time, int meeting_duration) {
     for (int i = 0; i < free_time.size(); i++) {
       if (free_time.get(i).duration() < meeting_duration) free_time.remove(i);
