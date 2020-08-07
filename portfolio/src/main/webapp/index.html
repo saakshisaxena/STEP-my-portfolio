@@ -58,8 +58,12 @@
             <br>
             <div id="contact-me">
                 <p style="font-size: larger;"><strong><em>Get in touch with me:</em></strong></p>
-                <a href="https://www.linkedin.com/in/saakshi-saxena-29797b174/" target="_blank"><img src="my-images/linkedin-pic.jpg" alt="Linkedin icon" style= "height:150px; width:150px;"/></a>
-                <a href="https://github.com/saakshisaxena" target="_blank"><img src="my-images/github-pic-light.png" alt="GitHub icon" style= "height:150px; width:150px;"/></a>
+                <a href="https://www.linkedin.com/in/saakshi-saxena-29797b174/" target="_blank">
+                    <img class="contact-me-icon" src="my-images/linkedin-pic.jpg" alt="Linkedin icon"/>
+                </a>
+                <a href="https://github.com/saakshisaxena" target="_blank">
+                    <img class="contact-me-icon" src="my-images/github-pic-light.png" alt="GitHub icon"/>
+                </a>
             </div>
             
             <div id="my-projects">
@@ -198,9 +202,27 @@
                 <form action="/data" method="POST">
                     <input id="text-area" type="text" name="comment" placeholder="Add your comment here" required>
                     <br>
-                    <input id="button" type="submit" value="Submit">
-                    <input id="button" type="reset">
+                    <input class="button" type="submit" value="Submit">
+                    <input class="button" type="reset">
                 </form>
+            </div>
+            <div id="translation-div">
+                <h2>Translation</h2>
+                <p>Select a language, then click translate to get a translation of all the comments.</p>
+
+                <select id="language" required>
+                <option value="en">English</option>
+                <option value="zh">Chinese</option>
+                <option value="es">Spanish</option>
+                <option value="hi">Hindi</option>
+                <option value="ar">Arabic</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="ko">Korean</option>
+                </select>
+
+                <button onclick="requestTranslation();">Translate</button>
+
             </div>
             <br>
             <div id="images-div">
@@ -220,6 +242,7 @@
                     <button>Submit</button>
                 </form>
             </div>
+            <hr/>
             <p><a href="#content" style="text-align: center; color: cornflowerblue;"> To top </a></p>
         </div>
   </body>
