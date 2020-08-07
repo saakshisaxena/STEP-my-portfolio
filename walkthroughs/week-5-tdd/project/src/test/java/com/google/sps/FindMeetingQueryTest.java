@@ -39,11 +39,13 @@ public final class FindMeetingQueryTest {
   private static final int TIME_0800AM = TimeRange.getTimeInMinutes(8, 0);
   private static final int TIME_0830AM = TimeRange.getTimeInMinutes(8, 30);
   private static final int TIME_0900AM = TimeRange.getTimeInMinutes(9, 0);
+  private static final int TIME_0915AM = TimeRange.getTimeInMinutes(9, 15);
   private static final int TIME_0930AM = TimeRange.getTimeInMinutes(9, 30);
   private static final int TIME_1000AM = TimeRange.getTimeInMinutes(10, 0);
   private static final int TIME_1100AM = TimeRange.getTimeInMinutes(11, 00);
 
   private static final int DURATION_30_MINUTES = 30;
+  private static final int DURATION_45_MINUTES = 45;
   private static final int DURATION_60_MINUTES = 60;
   private static final int DURATION_90_MINUTES = 90;
   private static final int DURATION_1_HOUR = 60;
@@ -271,4 +273,3 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 }
-
