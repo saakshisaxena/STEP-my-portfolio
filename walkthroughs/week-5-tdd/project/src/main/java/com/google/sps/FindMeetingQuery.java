@@ -46,8 +46,7 @@ public final class FindMeetingQuery {
       if (!Collections.disjoint(new ArrayList<>(request.getAttendees()), event.getAttendees())) {
         int conflicted_slot_index = containsEvent(free_time, event.getWhen());
         if (conflicted_slot_index != -1) {
-          TimeRange free_slot = free_time.get(conflicted_slot_index);
-          free_time = getNewFreeTime(free_slot, event.getWhen(), free_time);
+          free_time = getNewFreeTime(free_time.get(conflicted_slot_index), event.getWhen(), free_time);
         }
       }
     }
@@ -80,16 +79,36 @@ public final class FindMeetingQuery {
     int event_slot_start = event_slot.start();
     int event_slot_end = event_slot.end();
 
+    // Case: Free time: |---|
+    // Event slot:    |-------|
     if (event_slot_start < free_slot_start && event_slot_end > free_slot_end) {
       free_time.remove(free_slot);
-    } else if (event_slot_start <= free_slot_start && event_slot_end < free_slot_end) {
+    } 
+    
+    // Case: Free time: |--------|
+    // Event slot:     |-----|
+    // or
+    // |------|
+    // |--|
+    else if (event_slot_start <= free_slot_start && event_slot_end < free_slot_end) {
       free_time.remove(free_slot);
       free_time.addAll(Arrays.asList(TimeRange.fromStartEnd(event_slot_end, free_slot_end, false)));
-    } else if (event_slot_start > free_slot_start && event_slot_end >= free_slot_end) {
+    } 
+    
+    // Case: Free time: |--------|
+    // Event slot:            |-----|
+    // or
+    // |------|
+    //     |--|    
+    else if (event_slot_start > free_slot_start && event_slot_end >= free_slot_end) {
       free_time.remove(free_slot);
       free_time.addAll(
           Arrays.asList(TimeRange.fromStartEnd(free_slot_start, event_slot_start, false)));
-    } else if (event_slot_start > free_slot_start && event_slot_end < free_slot_end) {
+    } 
+    
+    // Case: Free time: |--------|
+    // Event slot:        |-----|    
+    else if (event_slot_start > free_slot_start && event_slot_end < free_slot_end) {
       free_time.remove(free_slot);
       free_time.addAll(
           Arrays.asList(
@@ -97,6 +116,7 @@ public final class FindMeetingQuery {
               TimeRange.fromStartEnd(event_slot_end, free_slot_end, false)));
     }
 
+    //else return the original free time
     return free_time;
   }
 
