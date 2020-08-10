@@ -135,8 +135,6 @@ public final class FindMeetingQuery {
     int eventSlotStart = eventSlot.start();
     int eventSlotEnd = eventSlot.end();
 
-    TimeRange newSlot;
-
     // Case: Free time: |---|
     // Event slot:    |-------|
     if (eventSlotStart <= freeSlotStart && eventSlotEnd >= freeSlotEnd) {
@@ -149,7 +147,7 @@ public final class FindMeetingQuery {
     // |------|
     // |--|
     else if (eventSlotStart <= freeSlotStart && eventSlotEnd < freeSlotEnd) {
-      newSlot = TimeRange.fromStartEnd(eventSlotEnd, freeSlotEnd, false);
+      TimeRange newSlot = TimeRange.fromStartEnd(eventSlotEnd, freeSlotEnd, false);
       if (isSlotTimeEnough(newSlot)) iterator.set(newSlot);
       else iterator.remove();
     }
@@ -160,7 +158,7 @@ public final class FindMeetingQuery {
     // |------|
     //     |--|
     else if (eventSlotStart > freeSlotStart && eventSlotEnd >= freeSlotEnd) {
-      newSlot = TimeRange.fromStartEnd(freeSlotStart, eventSlotStart, false);
+      TimeRange newSlot = TimeRange.fromStartEnd(freeSlotStart, eventSlotStart, false);
       if (isSlotTimeEnough(newSlot)) iterator.set(newSlot);
       else iterator.remove();
 
@@ -169,14 +167,22 @@ public final class FindMeetingQuery {
     // Case: Free time: |---------|
     // Event slot:        |-----|
     else if (eventSlotStart > freeSlotStart && eventSlotEnd < freeSlotEnd) {
-      newSlot = TimeRange.fromStartEnd(freeSlotStart, eventSlotStart, false);
+      boolean removedFirst= false;
+
+      TimeRange newSlot = TimeRange.fromStartEnd(freeSlotStart, eventSlotStart, false);
       if (isSlotTimeEnough(newSlot)) iterator.set(newSlot);
-      else iterator.remove();
+      else {
+          iterator.remove();
+          removedFirst = true;
+      }
 
       newSlot = TimeRange.fromStartEnd(eventSlotEnd, freeSlotEnd, false);
 
       if (isSlotTimeEnough(newSlot)) iterator.add(newSlot);
-      else iterator.remove();
+      else {
+          if(!removedFirst)
+          iterator.remove();
+      }
     }
   }
 
