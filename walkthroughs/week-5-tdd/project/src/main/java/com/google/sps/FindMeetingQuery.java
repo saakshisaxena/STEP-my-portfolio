@@ -30,7 +30,8 @@ public final class FindMeetingQuery {
     freeTime.addAll(Arrays.asList(TimeRange.WHOLE_DAY));
 
     meetingDuration = (int) request.getDuration();
-    LinkedList<String> optionalAttendees = new LinkedList<>(request.getOptionalAttendees());
+    Collection<String> optionalAttendees = request.getOptionalAttendees();
+    Collection<String> mandatoryAttendees = request.getAttendees();
 
     // If duration of the meeting is greater than a whole day, then return an empty list.
     if (meetingDuration > TimeRange.WHOLE_DAY.duration()) {
@@ -38,7 +39,7 @@ public final class FindMeetingQuery {
     }
 
     // If there are no attendees then return the whole day (ie the free time we have till now).
-    if (request.getAttendees().isEmpty() && optionalAttendees.isEmpty()) {
+    if (mandatoryAttendees.isEmpty() && optionalAttendees.isEmpty()) {
       return freeTime;
     }
 
@@ -48,7 +49,7 @@ public final class FindMeetingQuery {
     /* Changes freeTime such that it now conatins all the free time slots when the meeting can
     happen, updating the events that optional attendees can attend. */
     freeSlotsWithMandatoryAttendees(
-        freeTime, events, optionalAttendeeEvents, optionalAttendees, request);
+        freeTime, events, optionalAttendeeEvents, optionalAttendees, mandatoryAttendees);
 
     /* If free time is not empty and optional attendees are not empty
     then go ahead and look for time slots to have meeting with our optional attendees */
@@ -65,8 +66,8 @@ public final class FindMeetingQuery {
       LinkedList<TimeRange> freeTime,
       Collection<Event> events,
       LinkedList<Event> optionalAttendeeEvents,
-      LinkedList<String> optionalAttendees,
-      MeetingRequest request) {
+      Collection<String> optionalAttendees,
+      Collection<String> mandatoryAttendees) {
 
     for (Event event : events) {
       /* Check if the event has any optional attendees and
@@ -74,7 +75,8 @@ public final class FindMeetingQuery {
         later in the freeSlotsWithOptionalAttendees method */
       if (!Collections.disjoint(optionalAttendees, event.getAttendees()))
         optionalAttendeeEvents.add(event);
-      else findConflictAndResolve(freeTime, new LinkedList<>(request.getAttendees()), event);
+      if(!Collections.disjoint(mandatoryAttendees, event.getAttendees())) 
+        findConflictAndResolve(freeTime, event);
     }
 
   }
@@ -83,18 +85,18 @@ public final class FindMeetingQuery {
   private LinkedList<TimeRange> freeSlotsWithOptionalAttendees(
       LinkedList<Event> optionalAttendeeEvents,
       LinkedList<TimeRange> freeTime,
-      LinkedList<String> optionalAttendees) {
+      Collection<String> optionalAttendees) {
     // Create a new OptionalFreeTime list so that we still have our time slots with mandatory
     // attendees
     LinkedList<TimeRange> optionalFreeTime = new LinkedList<>(freeTime);
     /* Loop through all the events our optional attendees are attending and
        find free time slots we can have for our meeting */
     for (Event event : optionalAttendeeEvents) {
-      findConflictAndResolve(optionalFreeTime, optionalAttendees, event);
+      findConflictAndResolve(optionalFreeTime, event);
     }
     /* If we can't find any free time slots with optional attendees
       then return the original freeTime slots */
-    if (optionalFreeTime.isEmpty()) optionalFreeTime = freeTime;
+    if (optionalFreeTime.isEmpty()) return freeTime;
 
     return optionalFreeTime;
   }
@@ -102,8 +104,7 @@ public final class FindMeetingQuery {
   // This method finds the overlapping free time slot and event; altering the freeTime so that it
   // doesn't overlap anymore.
   private void findConflictAndResolve(
-      LinkedList<TimeRange> time, LinkedList<String> attendees, Event event) {
-    if (!Collections.disjoint(attendees, event.getAttendees())) {
+      LinkedList<TimeRange> time, Event event) {
       // Go through all the free time slots and check from which one is the event overlapping
       ListIterator<TimeRange> iterator = time.listIterator();
       while (iterator.hasNext()) {
@@ -114,7 +115,6 @@ public final class FindMeetingQuery {
           // After updating free time is done, check if the event ends in this free slots
           if (event.getWhen().end() <= freeSlot.end()) break;
         }
-      }
     }
   }
 
