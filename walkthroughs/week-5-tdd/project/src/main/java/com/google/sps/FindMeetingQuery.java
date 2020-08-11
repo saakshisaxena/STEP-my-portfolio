@@ -43,19 +43,16 @@ public final class FindMeetingQuery {
       return freeTime;
     }
 
-    // To store all the events which the optional attendees are attending.
-    LinkedList<Event> optionalAttendeeEvents = new LinkedList<>();
-
     // Changes freeTime such that it now contains all the free time slots when the meeting can
     // happen, updating the events that optional attendees can attend.
     freeSlotsWithMandatoryAttendees(
-        freeTime, events, optionalAttendeeEvents, optionalAttendees, mandatoryAttendees);
+        freeTime, events, mandatoryAttendees);
 
     // If free time is not empty and optional attendees are not empty
     // then go ahead and look for time slots to have meeting with our optional attendees.
-    if (!freeTime.isEmpty() && !optionalAttendeeEvents.isEmpty()) {
+    if (!freeTime.isEmpty()) {
       freeTime =
-          freeSlotsWithOptionalAttendees(optionalAttendeeEvents, freeTime, optionalAttendees);
+          freeSlotsWithOptionalAttendees(events, freeTime, optionalAttendees);
     }
 
     return freeTime;
@@ -66,17 +63,11 @@ public final class FindMeetingQuery {
   private void freeSlotsWithMandatoryAttendees(
       LinkedList<TimeRange> freeTime,
       Collection<Event> events,
-      LinkedList<Event> optionalAttendeeEvents,
-      Collection<String> optionalAttendees,
       Collection<String> mandatoryAttendees) {
 
     for (Event event : events) {
-      // Check if the event has any optional attendees and
-      // save it in the optionalAtttendeeEvents list which we will deal with
-      //  later in the freeSlotsWithOptionalAttendees method.
-      if (!Collections.disjoint(optionalAttendees, event.getAttendees())) {
-        optionalAttendeeEvents.add(event);
-      }
+      // Check if the event has any mandatory attendees and 
+      // then sends it to find conflict and reslove method
       if(!Collections.disjoint(mandatoryAttendees, event.getAttendees())) {
         findConflictAndResolve(freeTime, event);
       }
@@ -87,16 +78,18 @@ public final class FindMeetingQuery {
   /** Try checking for any time slots we can get for the meeting with optional attendees.
    */
   private LinkedList<TimeRange> freeSlotsWithOptionalAttendees(
-      LinkedList<Event> optionalAttendeeEvents,
+      Collection<Event> events,
       LinkedList<TimeRange> freeTime,
       Collection<String> optionalAttendees) {
     // Create a new OptionalFreeTime list so that we still have our time slots with mandatory
     // attendees
     LinkedList<TimeRange> optionalFreeTime = new LinkedList<>(freeTime);
-    // Loop through all the events our optional attendees are attending and
+    // Loop through all the events and check for which our optional attendees are attending and
     // find free time slots we can have for our meeting.
-    for (Event event : optionalAttendeeEvents) {
-      findConflictAndResolve(optionalFreeTime, event);
+    for (Event event : events) {
+      if (!Collections.disjoint(optionalAttendees, event.getAttendees())) {
+        findConflictAndResolve(optionalFreeTime, event);
+      }
     }
     // If we can't find any free time slots with optional attendees
     //  then return the original freeTime slots.
@@ -196,10 +189,8 @@ public final class FindMeetingQuery {
       if (isSlotTimeEnough(newSlot)) {
         iterator.add(newSlot);
       }
-      else {
-          if(!removedFirst) {
-            iterator.remove();
-          }
+      else if (!removedFirst) {
+        iterator.remove();
       }
     }
   }
