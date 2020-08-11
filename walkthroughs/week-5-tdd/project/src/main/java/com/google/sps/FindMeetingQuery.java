@@ -33,6 +33,11 @@ public final class FindMeetingQuery {
     Collection<String> optionalAttendees = request.getOptionalAttendees();
     Collection<String> mandatoryAttendees = request.getAttendees();
 
+    // Check for exceptions
+    if (meetingDuration <= 0) {
+        return Arrays.asList();
+    }
+
     // If duration of the meeting is greater than a whole day, then return an empty list.
     if (meetingDuration > TimeRange.WHOLE_DAY.duration()) {
       return Arrays.asList();
@@ -58,7 +63,8 @@ public final class FindMeetingQuery {
     return freeTime;
   }
 
-  /** Loop through all the events given and modify freeTime List.
+  /**
+   * Loop through all the events given and modify freeTime List.
    */
   private void freeSlotsWithMandatoryAttendees(
       LinkedList<TimeRange> freeTime,
@@ -72,10 +78,10 @@ public final class FindMeetingQuery {
         findConflictAndResolve(freeTime, event);
       }
     }
-
   }
 
-  /** Try checking for any time slots we can get for the meeting with optional attendees.
+  /**
+   * Try checking for any time slots we can get for the meeting with optional attendees.
    */
   private LinkedList<TimeRange> freeSlotsWithOptionalAttendees(
       Collection<Event> events,
@@ -94,13 +100,14 @@ public final class FindMeetingQuery {
     // If we can't find any free time slots with optional attendees
     //  then return the original freeTime slots.
     if (optionalFreeTime.isEmpty()) {
-    return freeTime;
+      return freeTime;
     }
 
     return optionalFreeTime;
   }
 
-  /** This method finds the overlapping free time slot and event; altering the freeTime so that it
+  /**
+   * This method finds the overlapping free time slot and event; altering the freeTime so that it
    * doesn't overlap anymore.
    */
   private void findConflictAndResolve(
@@ -120,7 +127,8 @@ public final class FindMeetingQuery {
     }
   }
 
-  /** This method free time, free time slot and current event with our free time slot and the iterator
+  /**
+   * This method free time, free time slot and current event with our free time slot and the iterator
    * and checks all conditions in which the event and time slot could overlap. 
    * Then calculates the free time minus overlapping part. 
    * It checks the new slot with the meeting slot and then adds or removes it. 
@@ -142,8 +150,7 @@ public final class FindMeetingQuery {
       // Case: Free time: |---|
       // Event slot:    |-------|
       iterator.remove();
-    }
-    else if (eventSlotStart <= freeSlotStart && eventSlotEnd < freeSlotEnd) {
+    } else if (eventSlotStart <= freeSlotStart && eventSlotEnd < freeSlotEnd) {
       // Case: Free time: |--------|
       // Event slot:     |-----|
       // or
@@ -152,12 +159,10 @@ public final class FindMeetingQuery {
       TimeRange newSlot = TimeRange.fromStartEnd(eventSlotEnd, freeSlotEnd, false);
       if (isSlotTimeEnough(newSlot)) {
         iterator.set(newSlot);
-      }
-      else {
+      } else {
         iterator.remove();
       }
-    }
-    else if (eventSlotStart > freeSlotStart && eventSlotEnd >= freeSlotEnd) {
+    } else if (eventSlotStart > freeSlotStart && eventSlotEnd >= freeSlotEnd) {
       // Case: Free time: |--------|
       // Event slot:            |-----|
       // or
@@ -166,21 +171,18 @@ public final class FindMeetingQuery {
       TimeRange newSlot = TimeRange.fromStartEnd(freeSlotStart, eventSlotStart, false);
       if (isSlotTimeEnough(newSlot)) {
         iterator.set(newSlot);
-      }
-      else {
+      } else {
         iterator.remove();
       }
-    }
-    else if (eventSlotStart > freeSlotStart && eventSlotEnd < freeSlotEnd) {
+    } else if (eventSlotStart > freeSlotStart && eventSlotEnd < freeSlotEnd) {
       // Case: Free time: |---------|
       // Event slot:        |-----|
-      boolean removedFirst= false;
+      boolean removedFirst = false;
 
       TimeRange newSlot = TimeRange.fromStartEnd(freeSlotStart, eventSlotStart, false);
       if (isSlotTimeEnough(newSlot)) {
         iterator.set(newSlot);
-      }
-      else {
+      } else {
         iterator.remove();
         removedFirst = true;
       }
@@ -188,8 +190,7 @@ public final class FindMeetingQuery {
       newSlot = TimeRange.fromStartEnd(eventSlotEnd, freeSlotEnd, false);
       if (isSlotTimeEnough(newSlot)) {
         iterator.add(newSlot);
-      }
-      else if (!removedFirst) {
+      } else if (!removedFirst) {
         iterator.remove();
       }
     }
