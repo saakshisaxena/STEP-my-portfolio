@@ -73,10 +73,12 @@ public final class FindMeetingQuery {
       /* Check if the event has any optional attendees and
         save it in the optionalAtttendeeEvents list which we will deal with
         later in the freeSlotsWithOptionalAttendees method */
-      if (!Collections.disjoint(optionalAttendees, event.getAttendees()))
+      if (!Collections.disjoint(optionalAttendees, event.getAttendees())) {
         optionalAttendeeEvents.add(event);
-      if(!Collections.disjoint(mandatoryAttendees, event.getAttendees())) 
+      }
+      if(!Collections.disjoint(mandatoryAttendees, event.getAttendees())) {
         findConflictAndResolve(freeTime, event);
+      }
     }
 
   }
@@ -96,7 +98,9 @@ public final class FindMeetingQuery {
     }
     /* If we can't find any free time slots with optional attendees
       then return the original freeTime slots */
-    if (optionalFreeTime.isEmpty()) return freeTime;
+    if (optionalFreeTime.isEmpty()) {
+    return freeTime;
+    }
 
     return optionalFreeTime;
   }
@@ -113,7 +117,9 @@ public final class FindMeetingQuery {
         if (freeSlot.overlaps(event.getWhen())) {
           updateFreeTime(freeSlot, event.getWhen(), time, iterator);
           // After updating free time is done, check if the event ends in this free slots
-          if (event.getWhen().end() <= freeSlot.end()) break;
+          if (event.getWhen().end() <= freeSlot.end()) {
+            break;
+          }
         }
     }
   }
@@ -135,53 +141,61 @@ public final class FindMeetingQuery {
     int eventSlotStart = eventSlot.start();
     int eventSlotEnd = eventSlot.end();
 
-    // Case: Free time: |---|
-    // Event slot:    |-------|
     if (eventSlotStart <= freeSlotStart && eventSlotEnd >= freeSlotEnd) {
+      // Case: Free time: |---|
+      // Event slot:    |-------|
       iterator.remove();
     }
-
-    // Case: Free time: |--------|
-    // Event slot:     |-----|
-    // or
-    // |------|
-    // |--|
     else if (eventSlotStart <= freeSlotStart && eventSlotEnd < freeSlotEnd) {
+      // Case: Free time: |--------|
+      // Event slot:     |-----|
+      // or
+      // |------|
+      // |--|
       TimeRange newSlot = TimeRange.fromStartEnd(eventSlotEnd, freeSlotEnd, false);
-      if (isSlotTimeEnough(newSlot)) iterator.set(newSlot);
-      else iterator.remove();
+      if (isSlotTimeEnough(newSlot)) {
+        iterator.set(newSlot);
+      }
+      else {
+        iterator.remove();
+      }
     }
-
-    // Case: Free time: |--------|
-    // Event slot:            |-----|
-    // or
-    // |------|
-    //     |--|
     else if (eventSlotStart > freeSlotStart && eventSlotEnd >= freeSlotEnd) {
+      // Case: Free time: |--------|
+      // Event slot:            |-----|
+      // or
+      // |------|
+      //     |--|
       TimeRange newSlot = TimeRange.fromStartEnd(freeSlotStart, eventSlotStart, false);
-      if (isSlotTimeEnough(newSlot)) iterator.set(newSlot);
-      else iterator.remove();
-
+      if (isSlotTimeEnough(newSlot)) {
+        iterator.set(newSlot);
+      }
+      else {
+        iterator.remove();
+      }
     }
-
-    // Case: Free time: |---------|
-    // Event slot:        |-----|
     else if (eventSlotStart > freeSlotStart && eventSlotEnd < freeSlotEnd) {
+      // Case: Free time: |---------|
+      // Event slot:        |-----|
       boolean removedFirst= false;
 
       TimeRange newSlot = TimeRange.fromStartEnd(freeSlotStart, eventSlotStart, false);
-      if (isSlotTimeEnough(newSlot)) iterator.set(newSlot);
+      if (isSlotTimeEnough(newSlot)) {
+        iterator.set(newSlot);
+      }
       else {
-          iterator.remove();
-          removedFirst = true;
+        iterator.remove();
+        removedFirst = true;
       }
 
       newSlot = TimeRange.fromStartEnd(eventSlotEnd, freeSlotEnd, false);
-
-      if (isSlotTimeEnough(newSlot)) iterator.add(newSlot);
+      if (isSlotTimeEnough(newSlot)) {
+        iterator.add(newSlot);
+      }
       else {
-          if(!removedFirst)
-          iterator.remove();
+          if(!removedFirst) {
+            iterator.remove();
+          }
       }
     }
   }
