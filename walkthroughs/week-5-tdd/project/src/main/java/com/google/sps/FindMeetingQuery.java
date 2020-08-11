@@ -46,13 +46,13 @@ public final class FindMeetingQuery {
     // To store all the events which the optional attendees are attending.
     LinkedList<Event> optionalAttendeeEvents = new LinkedList<>();
 
-    /* Changes freeTime such that it now conatins all the free time slots when the meeting can
-    happen, updating the events that optional attendees can attend. */
+    // Changes freeTime such that it now contains all the free time slots when the meeting can
+    // happen, updating the events that optional attendees can attend.
     freeSlotsWithMandatoryAttendees(
         freeTime, events, optionalAttendeeEvents, optionalAttendees, mandatoryAttendees);
 
-    /* If free time is not empty and optional attendees are not empty
-    then go ahead and look for time slots to have meeting with our optional attendees */
+    // If free time is not empty and optional attendees are not empty
+    // then go ahead and look for time slots to have meeting with our optional attendees.
     if (!freeTime.isEmpty() && !optionalAttendeeEvents.isEmpty()) {
       freeTime =
           freeSlotsWithOptionalAttendees(optionalAttendeeEvents, freeTime, optionalAttendees);
@@ -61,7 +61,8 @@ public final class FindMeetingQuery {
     return freeTime;
   }
 
-  // Loop through all the events given and modify freeTime List
+  /** Loop through all the events given and modify freeTime List.
+   */
   private void freeSlotsWithMandatoryAttendees(
       LinkedList<TimeRange> freeTime,
       Collection<Event> events,
@@ -70,9 +71,9 @@ public final class FindMeetingQuery {
       Collection<String> mandatoryAttendees) {
 
     for (Event event : events) {
-      /* Check if the event has any optional attendees and
-        save it in the optionalAtttendeeEvents list which we will deal with
-        later in the freeSlotsWithOptionalAttendees method */
+      // Check if the event has any optional attendees and
+      // save it in the optionalAtttendeeEvents list which we will deal with
+      //  later in the freeSlotsWithOptionalAttendees method.
       if (!Collections.disjoint(optionalAttendees, event.getAttendees())) {
         optionalAttendeeEvents.add(event);
       }
@@ -83,7 +84,8 @@ public final class FindMeetingQuery {
 
   }
 
-  // Try checking for any time slots we can get for the meeting with optional attendees
+  /** Try checking for any time slots we can get for the meeting with optional attendees.
+   */
   private LinkedList<TimeRange> freeSlotsWithOptionalAttendees(
       LinkedList<Event> optionalAttendeeEvents,
       LinkedList<TimeRange> freeTime,
@@ -91,13 +93,13 @@ public final class FindMeetingQuery {
     // Create a new OptionalFreeTime list so that we still have our time slots with mandatory
     // attendees
     LinkedList<TimeRange> optionalFreeTime = new LinkedList<>(freeTime);
-    /* Loop through all the events our optional attendees are attending and
-       find free time slots we can have for our meeting */
+    // Loop through all the events our optional attendees are attending and
+    // find free time slots we can have for our meeting.
     for (Event event : optionalAttendeeEvents) {
       findConflictAndResolve(optionalFreeTime, event);
     }
-    /* If we can't find any free time slots with optional attendees
-      then return the original freeTime slots */
+    // If we can't find any free time slots with optional attendees
+    //  then return the original freeTime slots.
     if (optionalFreeTime.isEmpty()) {
     return freeTime;
     }
@@ -105,8 +107,9 @@ public final class FindMeetingQuery {
     return optionalFreeTime;
   }
 
-  // This method finds the overlapping free time slot and event; altering the freeTime so that it
-  // doesn't overlap anymore.
+  /** This method finds the overlapping free time slot and event; altering the freeTime so that it
+   * doesn't overlap anymore.
+   */
   private void findConflictAndResolve(
       LinkedList<TimeRange> time, Event event) {
       // Go through all the free time slots and check from which one is the event overlapping
@@ -124,11 +127,12 @@ public final class FindMeetingQuery {
     }
   }
 
-  /* This method free time, free time slot and current event with our free time slot and the iterator
-    and checks all conditions in which the event and time slot could overlap. 
-    Then calculates the free time minus overlapping part. 
-    It checks the new slot with the meeting slot and then adds or removes it. 
-    (By removing/ setting or adding in the iterator). */
+  /** This method free time, free time slot and current event with our free time slot and the iterator
+   * and checks all conditions in which the event and time slot could overlap. 
+   * Then calculates the free time minus overlapping part. 
+   * It checks the new slot with the meeting slot and then adds or removes it. 
+   * (By removing/ setting or adding in the iterator).
+   */
   private void updateFreeTime(
       TimeRange freeSlot,
       TimeRange eventSlot,
